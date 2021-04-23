@@ -1,6 +1,6 @@
-<?php require_once('../modules/form-validators/examinee.validator.php');
+<?php require_once(__DIR__ . '/../../modules/form-validators/examinee.validator.php');
 
-class TestVerifierController {
+class TestVerifierController implements Controller {
 
     public function processRequest($request): string {
         if ($request->getMethod() === 'POST') {

@@ -1,6 +1,6 @@
 <?php require_once('../views/studies.view.php');
 
-class StudiesController {
+class StudiesController implements Controller {
     public function showStudies(Studies $studies): string {
         return StudiesView::render($studies);
     }

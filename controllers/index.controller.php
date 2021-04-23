@@ -2,7 +2,7 @@
 require_once('../views/index.view.php');
 require_once('../models/student.model.php');
 
-class IndexController {
+class IndexController implements Controller {
     public function getIndex(): string {
         $student = new Student();
         return IndexView::render($student);

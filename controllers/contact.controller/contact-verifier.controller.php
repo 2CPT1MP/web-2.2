@@ -1,8 +1,8 @@
 <?php
-require_once('../modules/form-validators/contact.validator.php');
-require_once('../views/message.view.php');
+require_once(__DIR__ . '/../../modules/form-validators/contact.validator.php');
+require_once(__DIR__ . '/../../views/message.view.php');
 
-class ContactVerifierController {
+class ContactVerifierController implements Controller {
 
     public function processRequest($request): string {
         if ($request->getMethod() === 'POST') {

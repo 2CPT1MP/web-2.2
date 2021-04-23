@@ -1,6 +1,6 @@
-<?php require_once('../views/contact.view.php');
+<?php require_once(__DIR__ . "/../../core/controller.core.php");
 
-class ContactController {
+class ContactController implements Controller {
     public function showContact(): string {
         return ContactView::render();
     }

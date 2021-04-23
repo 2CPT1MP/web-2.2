@@ -1,7 +1,7 @@
 <?php
-require_once('../modules/request.php');
+require_once('../core/request.core.php');
 
-require_once('../routes/index.route.php');
+require_once('../core/router.core.php');
 require_once('../routes/contact.route.php');
 require_once('../routes/test.route.php');
 
@@ -14,7 +14,7 @@ require_once('../controllers/photos.controller.php');
 require_once('../controllers/test.controller/test-verifier.controller.php');
 
 $request = new Request();
-$rootRouter = new RootRouter();
+$rootRouter = new Router();
 
 $rootRouter->addRouter("/contact", new ContactRouter());
 $rootRouter->addRouter("/test", new TestRouter());

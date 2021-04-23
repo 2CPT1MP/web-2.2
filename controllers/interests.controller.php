@@ -1,6 +1,6 @@
 <?php require_once('../views/interests.view.php');
 
-class InterestsController {
+class InterestsController implements Controller {
     public function showInterests(Interests $interests): string {
         return InterestsView::render($interests);
     }

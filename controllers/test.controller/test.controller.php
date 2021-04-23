@@ -1,6 +1,6 @@
-<?php require_once('../views/test.view.php');
+<?php require_once(__DIR__ . '/../../views/test.view.php');
 
-class TestController {
+class TestController implements Controller {
     public function showTest(Test $test): string {
         return TestView::render($test);
     }

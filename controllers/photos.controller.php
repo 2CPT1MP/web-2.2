@@ -1,6 +1,6 @@
 <?php require_once('../views/photos.view.php');
 
-class PhotosController {
+class PhotosController implements Controller {
     public function showPhotos(array $photos): string {
         return PhotosView::render($photos);
     }

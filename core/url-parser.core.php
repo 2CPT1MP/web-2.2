@@ -1,13 +1,13 @@
 <?php
 
 class UrlParser {
-    public static function parseRoute($routeUriStr) {
+    public static function parseRoute(string $routeUriStr): array {
         $splitPath = explode('/', $routeUriStr);
         array_shift($splitPath);
         return $splitPath;
     }
 
-    public static function parseQueryParams($queryParamsStr): array {
+    public static function parseQueryParams(string $queryParamsStr): array {
         $parsedListOfParams = [];
         $listOfParams = explode('&', $queryParamsStr);
 
@@ -18,7 +18,7 @@ class UrlParser {
         return $parsedListOfParams;
     }
 
-    public static function parseRequestUrl($requestUrl): array {
+    public static function parseRequestUrl(string $requestUrl): array {
         $paramPos = strpos($requestUrl, '?');
 
         if (!$paramPos)

@@ -1,7 +1,8 @@
-<?php require_once('url-parser.php');
+<?php require_once('url-parser.core.php');
 
 class Request {
-    private $method, $path, $params, $body;
+    private string $method;
+    private array $path, $params, $body;
 
     public function __construct() {
         $this->method = $_SERVER["REQUEST_METHOD"];
@@ -9,7 +10,7 @@ class Request {
         $this->body = $_POST;
     }
 
-    public function getMethod() {
+    public function getMethod(): string {
         return $this->method;
     }
 
@@ -25,11 +26,11 @@ class Request {
         $this->params = $result[1];
     }
 
-    public function getParams() {
+    public function getParams(): array {
         return $this->params;
     }
 
-    public function getPath() {
+    public function getPath(): array {
         return $this->path;
     }
 

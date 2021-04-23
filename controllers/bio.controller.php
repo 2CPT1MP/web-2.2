@@ -1,6 +1,6 @@
 <?php require_once('../views/bio.view.php');
 
-class BioController {
+class BioController implements Controller {
     public function showBio(Bio $bio): string {
         return BioView::render($bio);
     }

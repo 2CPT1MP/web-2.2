@@ -1,6 +1,6 @@
 <?php require_once('../views/history.view.php');
 
-class HistoryController {
+class HistoryController implements Controller {
     public function showHistory(): string {
         return HistoryView::render();
     }

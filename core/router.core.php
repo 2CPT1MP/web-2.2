@@ -1,20 +1,20 @@
 <?php
 
-class RootRouter {
+class Router {
     protected array $routers = [];
     protected array $controllers = [];
 
-    public function addRouter($baseUrl, $router) {
+    public function addRouter(string $baseUrl, Router $router): void {
         $parsedBaseUrl = UrlParser::parseRoute($baseUrl)[0];
         $this->routers[$parsedBaseUrl] = $router;
     }
 
-    public function addController($postfixUrl, $controller) {
+    public function addController(string $postfixUrl, Controller $controller): void {
         $parsedPostfixUrl = UrlParser::parseRoute($postfixUrl)[0];
         $this->controllers[$parsedPostfixUrl] = $controller;
     }
 
-    public function processRequest($request): string {
+    public function processRequest(Request $request): string {
         $basePath = $request->getPath()[0];
 
         if (count($request->getPath()) === 1)
