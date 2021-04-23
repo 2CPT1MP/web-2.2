@@ -22,8 +22,8 @@ class Request {
 
     public function setUrl($url): void {
         $result = UrlParser::parseRequestUrl($url);
-        $this->path = $result[0];
-        $this->params = $result[1];
+        $this->path = $result[0]?: [];
+        $this->params = $result[1]?: [];
     }
 
     public function getParams(): array {
