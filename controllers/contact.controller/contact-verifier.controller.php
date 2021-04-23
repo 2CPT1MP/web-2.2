@@ -10,7 +10,7 @@ class ContactVerifierController implements Controller {
             $result = $validator->validate();
 
             if ($result[0])
-                return MessageView::render("Успешная проверка", "Вееденная информация верна");
+                return MessageView::render("Успешная проверка", "Введенная информация верна");
             return MessageView::render('Проверка не прошла', $validator->validate()[1]);
         }
         return "<p>Handler was not found</p>";
