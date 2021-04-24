@@ -291,8 +291,7 @@ img.enlarged {
 	cursor: grab;
 }
 
-.message-table td, .message-table th {
-	text-align: left;
-	vertical-align: top;
-	padding: 1vh 1vw;
+.msg-block {
+	margin-top: 2em;
 }
+

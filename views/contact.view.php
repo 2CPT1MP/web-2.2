@@ -6,26 +6,18 @@ class ContactView {
         $html .= '<section class="card">';
 
         $msgs = "<h2>Оставленные сообщения</h2><article class=''><table class='message-table'>";
-        $msgs .= "<tr>
-                    <th>Дата</th>
-                    <th>Автор</th>
-                    <th>Пол</th>
-                    <th>Email</th>
-                    <th>Телефон</th>
-                    <th>Сообщение</th>
-                 </tr>";
 
         foreach ($messages as $message)
             $msgs .= "
-               <tr>
-                <td>{$message->getSaveDate()}</td>
-                <td>{$message->getName()}</td>
-                <td>{$message->getGender()}</td>
-                <td>{$message->getEmail()}</td>
-                <td>{$message->getPhone()}</td>
-                <td>{$message->getMessage()}</td>
+               <div class='msg-block'>
+                {$message->getSaveDate()}<br>
+                <b>{$message->getName()}</b>
+                &lt;<i>{$message->getEmail()}</i>&gt;
+                <br>
+                {$message->getMessage()}<br>
+                <i>Телефон: {$message->getPhone()}</i>
                 
-               </tr>
+               </div>
             ";
 
         $msgs .= "</table></article>";

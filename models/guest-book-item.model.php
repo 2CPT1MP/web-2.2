@@ -80,7 +80,7 @@ class GuestBookItem extends ActiveRecord {
     }
 
     public function save(): bool {
-        $this->saveDate = date('d.m.y');
+        $this->saveDate = date('d.m.Y H:i:s');
         $data = "$this->saveDate;$this->name;$this->gender;$this->email;$this->phone;$this->dayOfBirth;$this->monthOfBirth;$this->yearOfBirth;$this->message\n";
         $file = fopen(self::$FILE_NAME, 'a');
 
@@ -121,6 +121,11 @@ class GuestBookItem extends ActiveRecord {
             $newModel->setMessage($fields[8]);
             $models[] = $newModel;
         }
+
+        function sortFunction(GuestBookItem $a, GuestBookItem $b ): false | int {
+            return strtotime($b->getSaveDate()) - strtotime($a->getSaveDate());
+        }
+        usort($models, "sortFunction");
 
         return $models;
     }
