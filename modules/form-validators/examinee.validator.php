@@ -1,4 +1,5 @@
 <?php require_once('person.validator.php');
+require_once(__DIR__ . "/../../models/test.model/test-results.model.php");
 
 class ExamineeValidator extends PersonValidator {
     private $formData;
@@ -43,25 +44,19 @@ class ExamineeValidator extends PersonValidator {
         $student = new Student();
         $test = $student->getTest();
         $questions = $test->getTestQuestions();
-
-        $score = 0;
-        $total = 0;
-
-        foreach ($questions as $q)
-            $total += count($q->getRightAnswers());
+        $testResult = new TestResults();
 
         foreach ($questions as $question) {
-            $rightAnswers = $question->getRightAnswers();
-
             if (!isset($this->formData[str_replace(' ', '_', $question->getQuestion())]))
-                continue;
-
-            foreach ($this->formData[str_replace(' ', '_', $question->getQuestion())] as $answer)
-                foreach ($rightAnswers as $answ)
-                    if ($answ === $answer)
-                        $score++;
+                $newAnswer = new TestAnswer($question, []);
+            else
+                $newAnswer = new TestAnswer($question, $this->formData[str_replace(' ', '_', $question->getQuestion())]);
+            $testResult->addAnswer($newAnswer);
         }
-        $percent = $score / $total * 100;
-        return "<p>Правильных ответов {$score} из {$total} ($percent%)</p>";
+        $actualScore = $testResult->getActualScore();
+        $maxScore = $testResult->getMaxScore();
+
+        $percent = $actualScore / $maxScore * 100;
+        return "<p>Правильных ответов {$actualScore} из {$maxScore} ($percent%)</p>";
     }
 }
