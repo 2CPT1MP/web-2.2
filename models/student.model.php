@@ -7,6 +7,7 @@ require_once('studies.model/schedule-record.model.php');
 
 require_once('test.model/test.model.php');
 require_once('test.model/test-question.model.php');
+require_once('test.model/answer.model.php');
 
 class Student {
     private string $name, $group, $labTitle;
@@ -121,22 +122,22 @@ class Student {
         $this->test = new Test();
 
         $question1 = new TestQuestion("Операционной системой не является", 'MULTIPLE_SELECT');
-        $question1->addRightAnswer("Word");
-        $question1->addRightAnswer("PowerPoint");
-        $question1->addWrongAnswer("Ubuntu");
+        $question1->addRightAnswer(new Answer("Word"));
+        $question1->addRightAnswer(new Answer("PowerPoint"));
+        $question1->addWrongAnswer(new Answer("Ubuntu"));
 
         $question2 = new TestQuestion("Браузером  не является", "RADIO");
-        $question2->addWrongAnswer("Internet Explorer");
-        $question2->addRightAnswer("VLC");
-        $question2->addWrongAnswer("Microsoft Edge");
+        $question2->addWrongAnswer(new Answer("Internet Explorer"));
+        $question2->addRightAnswer(new Answer("VLC"));
+        $question2->addWrongAnswer(new Answer("Microsoft Edge"));
 
         $question3 = new TestQuestion("Неправильным именем переменной является", "SINGLE_SELECT");
-        $question3->addWrongAnswer("_var");
-        $question3->addRightAnswer("2var");
-        $question3->addWrongAnswer("var");
+        $question3->addWrongAnswer(new Answer("_var"));
+        $question3->addRightAnswer(new Answer("2var"));
+        $question3->addWrongAnswer(new Answer("var"));
 
         $question4 = new TestQuestion("JS расшифровывается как", "TEXT");
-        $question4->addRightAnswer("JavaScript");
+        $question4->addRightAnswer(new Answer("JavaScript"));
 
         $this->test->addTestQuestion($question1);
         $this->test->addTestQuestion($question2);

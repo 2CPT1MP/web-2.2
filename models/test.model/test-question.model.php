@@ -21,11 +21,11 @@ class TestQuestion extends ActiveRecord {
         $this->question = $question;
     }
 
-    public function addRightAnswer(string $answer): void {
+    public function addRightAnswer(Answer $answer): void {
         $this->rightAnswers[] = $answer;
     }
 
-    public function addWrongAnswer(string $answer) {
+    public function addWrongAnswer(Answer $answer) {
         $this->wrongAnswers[] = $answer;
     }
 
@@ -53,6 +53,17 @@ class TestQuestion extends ActiveRecord {
         return $this->type = $type;
     }
 
+    private function saveAnswers() {
+        foreach ($this->wrongAnswers as $wrongAnswer) {
+            $wrongAnswer->setTestQuestionId($this->id);
+            $wrongAnswer->save();
+        }
+        foreach ($this->rightAnswers as $rightAnswer) {
+            $rightAnswer->setTestQuestionId($this->id);
+            $rightAnswer->save();
+        }
+    }
+
     public function save(): bool {
         $this->sync();
 
@@ -61,10 +72,13 @@ class TestQuestion extends ActiveRecord {
                 INSERT INTO TestQuestion(type, question) 
                 VALUES(:type, :question);
             ");
-            //$query->bindParam(':table', self::$TABLE_NAME);
             $query->bindParam(':type', $this->type);
             $query->bindParam(':question', $this->question);
-            return $query->execute();
+            $res = $query->execute();
+            $this->setId(parent::$databaseObject->lastInsertId());
+            $this->saveAnswers();
+
+            return $res;
         }
 
         $query = parent::$databaseObject->prepare("
@@ -72,7 +86,6 @@ class TestQuestion extends ActiveRecord {
                     SET type = :type, text = :text
                     WHERE id = :id;
             ");
-        //$query->bindParam(':TableName', self::$TABLE_NAME);
         $query->bindParam(':type', $this->type);
         $query->bindParam(':question', $this->question);
         $query->bindParam(':id', $this->id);
@@ -88,7 +101,6 @@ class TestQuestion extends ActiveRecord {
                     DELETE FROM TestQuestion
                     WHERE id = :id;
             ");
-       // $query->bindParam(':TableName', self::$TABLE_NAME);
         $query->bindParam(':id', $this->id);
         return $query->execute();
     }
@@ -100,7 +112,6 @@ class TestQuestion extends ActiveRecord {
                     FROM TestQuestion
                     WHERE id = :id;
             ");
-       // $query->bindParam(':TableName', self::$TABLE_NAME);
         $query->bindParam(':id', $id);
         $query->execute();
         $resultSet = $query->fetch(PDO::FETCH_ASSOC);
@@ -111,6 +122,7 @@ class TestQuestion extends ActiveRecord {
         $newObject = new TestQuestion($resultSet["question"]);
         $newObject->setId($resultSet["id"]);
         $newObject->setType($resultSet["type"]);
+        $newObject->findAllAnswers();
 
         return $newObject;
     }
@@ -121,7 +133,6 @@ class TestQuestion extends ActiveRecord {
                     SELECT * 
                     FROM TestQuestion;
             ");
-        //$query->bindParam(':TableName', self::$TABLE_NAME);
         $query->execute();
         $resultSet = $query->fetchAll(PDO::FETCH_ASSOC);
 
@@ -133,12 +144,30 @@ class TestQuestion extends ActiveRecord {
             $newObject = new TestQuestion($row["question"]);
             $newObject->setId($row["id"]);
             $newObject->setType($row["type"]);
+            $newObject->findAllAnswers();
             $objects[] = $newObject;
         }
         return $objects;
     }
 
-    private static function sync() {
+    public function findAllAnswers(): void {
+        if ($this->id === null)
+            return;
+        $answers = Answer::findAllByQuestionId($this->id);
+
+        foreach ($answers as $answer) {
+            switch ($answer->getType()) {
+                case "RIGHT":
+                    $this->rightAnswers[] = $answer;
+                    break;
+                case "WRONG":
+                    $this->wrongAnswers[] = $answer;
+                    break;
+            }
+        }
+    }
+
+    public static function sync() {
         $query = parent::$databaseObject->prepare("
                     CREATE TABLE IF NOT EXISTS TestQuestion(
                         id INTEGER PRIMARY KEY AUTO_INCREMENT,
@@ -146,7 +175,6 @@ class TestQuestion extends ActiveRecord {
                             (type IN ('SINGLE_SELECT', 'MULTIPLE_SELECT', 'TEXT', 'RADIO')),
                         question VARCHAR(1000));
                     ");
-        //$query->bindParam(':TableName', self::$TABLE_NAME);
         $query->execute();
     }
 }
