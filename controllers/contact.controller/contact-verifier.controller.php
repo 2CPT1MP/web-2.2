@@ -24,8 +24,7 @@ class ContactVerifierController implements Controller {
                 $data->setMessage($body["sender-msg"]);
 
                 $data->save();
-                header("Location: /contact");
-                return MessageView::render("Успешная проверка", "Введенная информация верна");
+                return MessageView::render("Успешная проверка", "Введенная информация сохранена");
             }
             return MessageView::render('Проверка не прошла', $validator->validate()[1]);
         }

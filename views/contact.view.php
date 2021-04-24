@@ -6,6 +6,7 @@ class ContactView {
         $html .= '<section class="card">';
 
         $msgs = "<h2>Оставленные сообщения</h2><article class=''><table class='message-table'>";
+        $msgs .= "<a href='/contact/messages'><b>Загрузить файл сообщений</b></a>";
 
         foreach ($messages as $message)
             $msgs .= "
