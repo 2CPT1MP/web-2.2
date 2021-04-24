@@ -2,7 +2,7 @@
 require_once('../core/active-record.core.php');
 
 class GuestBookItem extends ActiveRecord {
-    private static string $FILE_NAME = 'messages.inc';
+    private static string $FILE_NAME = '../files/messages.inc';
     private string $name, $gender, $email, $phone, $message;
     private int $dayOfBirth, $monthOfBirth, $yearOfBirth;
     private string $saveDate;
@@ -121,12 +121,10 @@ class GuestBookItem extends ActiveRecord {
             $newModel->setMessage($fields[8]);
             $models[] = $newModel;
         }
-
         function sortFunction(GuestBookItem $a, GuestBookItem $b ): false | int {
             return strtotime($b->getSaveDate()) - strtotime($a->getSaveDate());
         }
         usort($models, "sortFunction");
-
         return $models;
     }
 }

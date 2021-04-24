@@ -292,6 +292,18 @@ img.enlarged {
 }
 
 .msg-block {
+	margin-bottom: 2em;
+}
+
+input, select {
+	margin-bottom: 1em;
+}
+
+h2 {
 	margin-top: 2em;
+}
+
+.card h2 {
+	margin-top: 0;
 }
 
