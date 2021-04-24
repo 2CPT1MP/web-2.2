@@ -12,9 +12,11 @@ require_once('../controllers/interests.controller.php');
 require_once('../controllers/studies.controller.php');
 require_once('../controllers/photos.controller.php');
 require_once('../controllers/test.controller/test-verifier.controller.php');
+require_once('../core/active-record.core.php');
 
 $request = new Request();
 $rootRouter = new Router();
+ActiveRecord::connect();
 
 $rootRouter->addRouter("/contact", new ContactRouter());
 $rootRouter->addRouter("/test", new TestRouter());
@@ -28,3 +30,9 @@ $rootRouter->addController('/history', new HistoryController());
 
 $res = $rootRouter->processRequest($request);
 echo $res;
+
+
+require_once("../models/test.model/answer.model.php");
+$newAnswer = Answer::findAll();
+var_dump($newAnswer);
+
