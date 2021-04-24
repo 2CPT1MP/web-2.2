@@ -179,7 +179,7 @@ table {
 
 
 input[type=text], input[type=email], select, option,
-input[type=submit], input[type=reset], textarea, input[type=number], input[type=tel], button {
+input[type=submit], input[type=reset], textarea, input[type=number], input[type=tel], input[type=file], button {
 	padding: 1.25%;
 	display: inline-block;
 	width: 100%;
