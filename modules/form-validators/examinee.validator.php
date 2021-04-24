@@ -27,7 +27,7 @@ class ExamineeValidator extends PersonValidator {
         }
 
         if ($valid)
-            return [true, "$msg {$this->verifyResults()}"];
+            return [true, $this->verifyResults()];
         return [false, "$msg"];
     }
 
@@ -40,7 +40,7 @@ class ExamineeValidator extends PersonValidator {
         return is_numeric($age) && $age > 16 && $age < 150;
     }
 
-    public function verifyResults(): string {
+    public function verifyResults(): TestResults {
         $student = new Student();
         $test = $student->getTest();
         $questions = $test->getTestQuestions();
@@ -57,6 +57,6 @@ class ExamineeValidator extends PersonValidator {
         $maxScore = $testResult->getMaxScore();
 
         $percent = $actualScore / $maxScore * 100;
-        return "<p>Правильных ответов {$actualScore} из {$maxScore} ($percent%)</p>";
+        return $testResult;
     }
 }

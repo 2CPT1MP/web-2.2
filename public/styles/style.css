@@ -308,3 +308,12 @@ h2 {
 	margin-top: 0;
 }
 
+.correct {
+	color: green;
+}
+
+.wrong {
+	color: red;
+}
+
+

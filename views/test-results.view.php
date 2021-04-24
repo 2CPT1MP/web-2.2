@@ -1,14 +1,44 @@
 <?php require_once('header.view.php');
 require_once("../models/test.model/test-results.model.php");
+require_once("../models/test.model/test-question.model.php");
 
 class TestResultsView {
     public static function render(TestResults $testResults): string {
         $html = HeaderView::render("Результаты тестирования");
-        $html .= '<section class="card">';
+        $html .= '<section class="card"><h2>Результаты тестирования</h2>';
 
-        return "$html 
-            <h3>$title</h3>
-            <p>$text</p>
-        </section>";
+        $number = 1;
+        foreach ($testResults->getTestAnswer() as $testQuestion) {
+            $actualAnswer = $testQuestion->getAnswers();
+
+            $html .= "<h3>Вопрос $number: {$testQuestion->getTestQuestion()->getQuestion()} ({$testQuestion->getActualScore()} / {$testQuestion->getMaxScore()})</h3>";
+
+            $allAnswers = array_merge($testQuestion->getTestQuestion()->getRightAnswers(), $testQuestion->getTestQuestion()->getWrongAnswers());
+
+            foreach ($testQuestion->getTestQuestion()->getRightAnswers() as $rightAnswer)
+                if (in_array($rightAnswer, $actualAnswer))
+                    $html .= "<input class='correct' type='checkbox' checked disabled><span class='correct'> {$rightAnswer}</span><br>";
+                else
+                    $html .= "<input type='checkbox' disabled><span class='correct'> {$rightAnswer}</span><br>";
+
+            foreach ($testQuestion->getTestQuestion()->getWrongAnswers() as $wrongAnswer)
+                if (in_array($wrongAnswer, $actualAnswer))
+                    $html .= "<input type='checkbox' checked disabled><span class='wrong'> {$wrongAnswer}</span><br>";
+                else
+                    $html .= "<input type='checkbox' disabled> <span class='wrong'> {$wrongAnswer}</span><br>";
+
+            foreach ($actualAnswer as $answ)
+                if (!in_array($answ, $allAnswers))
+                    $html .= "<input type='checkbox' checked disabled><span class='wrong'> {$answ}</span><br>";
+
+            $number++;
+        }
+
+        $actualScore = $testResults->getActualScore();
+        $possibleScore = $testResults->getMaxScore();
+        $percent = $actualScore / $possibleScore * 100;
+
+        $html .= "<h2>Итог: $actualScore / $possibleScore ($percent%)</h2>";
+        return "</section>" . $html;
     }
 }

@@ -1,4 +1,5 @@
 <?php require_once(__DIR__ . '/../../modules/form-validators/examinee.validator.php');
+require_once(__DIR__ . '/../../views/test-results.view.php');
 
 class TestVerifierController implements Controller {
 
@@ -8,7 +9,7 @@ class TestVerifierController implements Controller {
             $result = $validator->validate();
 
             if ($result[0])
-                return MessageView::render("Тест пройден", $validator->validate()[1]);
+                return TestResultsView::render($validator->validate()[1]);
             return MessageView::render('Тест не пройден', $validator->validate()[1]);
         }
         return "<p>Handler was not found</p>";
