@@ -81,15 +81,15 @@ class HeaderView {
                         <a href="/photos">Альбом</a>
                       </div>';
 
-        if ($title === 'Контакт')
+        if ($title === 'Гостевая книга')
             $html .=  '<div>
                          <img id="contact" src="/icons/contact-checked.png" alt="">
-                         <a href="/contact" class="active">Контакт</a>
+                         <a href="/contact" class="active">Гостевая книга</a>
                        </div>';
         else
             $html .=  '<div>
                          <img id="contact" src="/icons/contact.png" alt="">
-                         <a href="/contact">Контакт</a>
+                         <a href="/contact">Гостевая книга</a>
                        </div>';
 
         if ($title === 'Тест')

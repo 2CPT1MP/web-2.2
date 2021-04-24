@@ -1,12 +1,38 @@
 <?php require_once('header.view.php');
 
 class ContactView {
-    public static function render(): string {
-        $html = HeaderView::render('Контакт');
+    public static function render(array $messages): string {
+        $html = HeaderView::render('Гостевая книга');
         $html .= '<section class="card">';
+
+        $msgs = "<h2>Оставленные сообщения</h2><article class=''><table class='message-table'>";
+        $msgs .= "<tr>
+                    <th>Дата</th>
+                    <th>Автор</th>
+                    <th>Пол</th>
+                    <th>Email</th>
+                    <th>Телефон</th>
+                    <th>Сообщение</th>
+                 </tr>";
+
+        foreach ($messages as $message)
+            $msgs .= "
+               <tr>
+                <td>{$message->getSaveDate()}</td>
+                <td>{$message->getName()}</td>
+                <td>{$message->getGender()}</td>
+                <td>{$message->getEmail()}</td>
+                <td>{$message->getPhone()}</td>
+                <td>{$message->getMessage()}</td>
+                
+               </tr>
+            ";
+
+        $msgs .= "</table></article>";
 
         return $html . <<<CONTACT
             <article class="flex-container card">
+            <h2>Оставить сообщение</h2>
                 <form id="contact-form" action="/contact/verify" method=POST autocomplete="off">
                     <label id="fio-label">Ваше ФИО
                         <input name="sender-name" type="text" required autocomplete="off">
@@ -55,11 +81,12 @@ class ContactView {
                         <input name="sender-phone" type="tel" required autocomplete="off">
                     </label>
                     <label>Сообщение
-                        <textarea name="sender-msg" rows="10" cols="50" required>&nbsp;</textarea>
+                        <textarea name="sender-msg" rows="10" cols="50" required></textarea>
                     </label>
                     <button id='submit-btn' type="submit" onsubmit="">Submit</button>
                 </form>
             </article>
+            $msgs
         CONTACT;
     }
 }
