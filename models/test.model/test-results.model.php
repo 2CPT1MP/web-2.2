@@ -3,7 +3,7 @@ require_once("test-answer.model.php");
 require_once(__DIR__ . "/../../core/active-record.core.php");
 
 class TestResults extends ActiveRecord {
-    private int $id;
+    private int | null $id = null;
     private array $testAnswer = [];
 
     public function addAnswer(TestAnswer $answer) {
@@ -11,7 +11,18 @@ class TestResults extends ActiveRecord {
     }
 
     public function save(): bool {
-        // TODO: Implement save() method.
+        $query = parent::$databaseObject->prepare("
+                CREATE TABLE IF NOT EXISTS TestResults(
+                    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+                    name VARCHAR(50)
+                    );");
+        $query->execute();
+
+        if ($this->id === null) {
+
+
+        }
+
         return false;
     }
 

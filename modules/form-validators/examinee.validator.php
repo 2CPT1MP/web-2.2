@@ -53,10 +53,7 @@ class ExamineeValidator extends PersonValidator {
                 $newAnswer = new TestAnswer($question, $this->formData[str_replace(' ', '_', $question->getQuestion())]);
             $testResult->addAnswer($newAnswer);
         }
-        $actualScore = $testResult->getActualScore();
-        $maxScore = $testResult->getMaxScore();
-
-        $percent = $actualScore / $maxScore * 100;
+        $testResult->save();
         return $testResult;
     }
 }
