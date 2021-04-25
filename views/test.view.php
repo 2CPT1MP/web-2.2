@@ -49,7 +49,7 @@ class TestView {
                       <option value='none' selected disabled>-</option>
             ";
         foreach ($answers as $answer)
-            $html .= "<option value=$answer>$answer</option>";
+            $html .= "<option value=\"{$answer->getText()}\">{$answer->getText()}</option>";
 
         return $html . "</select>";
     }
@@ -60,7 +60,7 @@ class TestView {
                       <option value='none' disabled>-</option>
             ";
         foreach ($answers as $answer)
-            $html .= "<option value=$answer>$answer</option>";
+            $html .= "<option value=\"{$answer->getText()}\">{$answer->getText()}</option>";
 
         return $html . "</select>";
     }
@@ -75,7 +75,7 @@ class TestView {
     public static function showRadio(string $title, array $answers): string {
         $html = "<label>$title<br>";
         foreach ($answers as $answer)
-            $html .= "<input required type='radio' name=\"{$title}[]\" value=\"$answer\"> $answer<br>";
+            $html .= "<input required type='radio' name=\"{$title}[]\" value=\"{$answer->getText()}\"> {$answer->getText()}<br>";
 
         return $html . "</label>";
     }

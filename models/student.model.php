@@ -119,7 +119,7 @@ class Student {
 
         for ($index = 1; $index <= 15; $index++)
             $this->addPhoto("Изображение $index", "/photos?id=$index");
-        $this->test = new Test();
+        $this->test = new Test("Инфо");
 
         $question1 = new TestQuestion("Операционной системой не является", 'MULTIPLE_SELECT');
         $question1->addRightAnswer(new Answer("Word"));

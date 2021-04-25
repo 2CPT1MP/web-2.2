@@ -10,30 +10,33 @@ class TestResultsView {
         $number = 1;
         foreach ($testResults->getTestAnswer() as $testQuestion) {
             $actualAnswer = $testQuestion->getAnswers();
-
             $html .= "<h3>Вопрос $number: {$testQuestion->getTestQuestion()->getQuestion()} ({$testQuestion->getActualScore()} / {$testQuestion->getMaxScore()})</h3>";
-
             $allAnswers = array_merge($testQuestion->getTestQuestion()->getRightAnswers(), $testQuestion->getTestQuestion()->getWrongAnswers());
 
-            foreach ($testQuestion->getTestQuestion()->getRightAnswers() as $rightAnswer)
-                if (in_array($rightAnswer, $actualAnswer))
-                    $html .= "<input class='correct' type='checkbox' checked disabled><span class='correct'> {$rightAnswer}</span><br>";
+            foreach ($testQuestion->getTestQuestion()->getRightAnswers() as $rightAnswer) {
+                if (in_array($rightAnswer->getText(), $actualAnswer))
+                    $html .= "<input class='correct' type='checkbox' checked disabled><span class='correct'> {$rightAnswer->getText()}</span><br>";
                 else
-                    $html .= "<input type='checkbox' disabled><span class='correct'> {$rightAnswer}</span><br>";
+                    $html .= "<input type='checkbox' disabled><span class='correct'> {$rightAnswer->getText()}</span><br>";
+            }
 
-            foreach ($testQuestion->getTestQuestion()->getWrongAnswers() as $wrongAnswer)
-                if (in_array($wrongAnswer, $actualAnswer))
-                    $html .= "<input type='checkbox' checked disabled><span class='wrong'> {$wrongAnswer}</span><br>";
+            foreach ($testQuestion->getTestQuestion()->getWrongAnswers() as $wrongAnswer) {
+                if (in_array($wrongAnswer->getText(), $actualAnswer))
+                    $html .= "<input type='checkbox' checked disabled><span class='wrong'> {$wrongAnswer->getText()}</span><br>";
                 else
-                    $html .= "<input type='checkbox' disabled> <span class='wrong'> {$wrongAnswer}</span><br>";
+                    $html .= "<input type='checkbox' disabled> <span class='wrong'> {$wrongAnswer->getText()}</span><br>";
+            }
 
-            foreach ($actualAnswer as $answ)
-                if (!in_array($answ, $allAnswers))
-                    $html .= "<input type='checkbox' checked disabled><span class='wrong'> {$answ}</span><br>";
+            $allAnswersTexts = [];
+            foreach ($allAnswers as $allAnswer)
+                $allAnswersTexts[] = $allAnswer->getText();
 
+            foreach ($actualAnswer as $answer) {
+                if (!in_array($answer, $allAnswersTexts))
+                    $html .= "<input type='checkbox' checked disabled><span class='wrong'> {$answer->getText()}</span><br>";
+            }
             $number++;
         }
-
         $actualScore = $testResults->getActualScore();
         $possibleScore = $testResults->getMaxScore();
         $percent = $actualScore / $possibleScore * 100;

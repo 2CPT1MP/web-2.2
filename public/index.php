@@ -31,7 +31,10 @@ $rootRouter->addController('/history', new HistoryController());
 $res = $rootRouter->processRequest($request);
 echo $res;
 
-$question = new TestQuestion("Вопросик");
-$rightAnswer = new Answer("Ответ");
-$question->addRightAnswer($rightAnswer);
-$question->save();
+//var_dump('<pre>', Answer::findAll(), '</pre>');
+
+require_once("../models/test.model/test.model.php");
+$t = Test::findById(1);
+$t->delete();
+
+var_dump(Test::findAll());

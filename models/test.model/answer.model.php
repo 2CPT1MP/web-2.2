@@ -15,7 +15,7 @@ class Answer extends ActiveRecord {
         $this->type = $type;
     }
 
-    public function setTestQuestionId(int $testQuestionId): void {
+    public function setTestQuestionId(int | null $testQuestionId): void {
         $this->testQuestionId = $testQuestionId;
     }
 
@@ -44,7 +44,7 @@ class Answer extends ActiveRecord {
     }
 
     public function save(): bool {
-        $this->sync();
+        self::sync();
 
         if ($this->id === null) {
             $query = parent::$databaseObject->prepare("
@@ -55,6 +55,7 @@ class Answer extends ActiveRecord {
             $query->bindParam(':text', $this->text);
             $query->bindParam(':testQuestionId', $this->testQuestionId);
             $res = $query->execute();
+            var_dump(parent::$databaseObject->lastInsertId());
             $this->setId(parent::$databaseObject->lastInsertId());
             return $res;
         }

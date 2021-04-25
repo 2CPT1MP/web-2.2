@@ -9,7 +9,7 @@ class TestVerifierController implements Controller {
             $result = $validator->validate();
 
             if ($result[0])
-                return TestResultsView::render($validator->validate()[1]);
+                return TestResultsView::render($result[1]);
             return MessageView::render('Тест не пройден', $validator->validate()[1]);
         }
         return "<p>Handler was not found</p>";

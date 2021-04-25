@@ -47,13 +47,21 @@ class ExamineeValidator extends PersonValidator {
         $testResult = new TestResults();
 
         foreach ($questions as $question) {
+
             if (!isset($this->formData[str_replace(' ', '_', $question->getQuestion())]))
                 $newAnswer = new TestAnswer($question, []);
-            else
-                $newAnswer = new TestAnswer($question, $this->formData[str_replace(' ', '_', $question->getQuestion())]);
+            else {
+                $formAnswersArray = $this->formData[str_replace(' ', '_', $question->getQuestion())];
+                $resultingAnswersArray = [];
+                foreach ($formAnswersArray as $formTextAnswer)
+                    $resultingAnswersArray[] = new Answer($formTextAnswer);
+
+                $newAnswer = new TestAnswer($question, $resultingAnswersArray);
+            }
+            var_dump('<pre>', $newAnswer,'</pre><hr>');
             $testResult->addAnswer($newAnswer);
         }
-        $testResult->save();
+        //$testResult->save();
         return $testResult;
     }
 }
