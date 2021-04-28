@@ -6,33 +6,19 @@ class Test extends ActiveRecord {
     private string | null $title;
     private int | null $id = null;
 
-    public function getTitle(): string | null {
-        return $this->title;
-    }
+    public function getTitle(): string | null { return $this->title; }
+    public function setTitle(string $title): void { $this->title = $title; }
 
-    public function __construct(string $title) {
-        $this->title = $title;
-    }
+    public function addTestQuestion(TestQuestion $testQuestion): void { $this->testQuestions[] = $testQuestion; }
+    public function getTestQuestions(): array { return $this->testQuestions; }
 
-    public function setTitle(string $title): void {
-        $this->title = $title;
-    }
+    public function getId(): ?int { return $this->id; }
+    public function setId(?int $id): void { $this->id = $id; }
 
-    public function addTestQuestion(TestQuestion $testQuestion): void {
-        $this->testQuestions[] = $testQuestion;
-    }
+    public function setTestQuestions(array $testQuestions): void { $this->testQuestions = $testQuestions; }
 
-    public function getTestQuestions(): array {
-        return $this->testQuestions;
-    }
+    public function __construct(string $title) {  $this->title = $title; }
 
-    public function getId(): ?int {
-        return $this->id;
-    }
-
-    public function setId(?int $id): void {
-        $this->id = $id;
-    }
 
     public function save(): bool {
         self::sync();
@@ -47,6 +33,7 @@ class Test extends ActiveRecord {
             $res = $query->execute();
             var_dump(parent::$databaseObject->lastInsertId());
             $this->setId(parent::$databaseObject->lastInsertId());
+            $this->saveQuestions();
             return $res;
         }
 
@@ -54,10 +41,18 @@ class Test extends ActiveRecord {
                     UPDATE Test 
                     SET title = :title
                     WHERE id = :id;
-            ");
+        ");
 
         $query->bindParam(':id', $this->id);
+        $this->saveQuestions();
         return $query->execute();
+    }
+
+    private function saveQuestions() {
+        foreach ($this->testQuestions as $question) {
+            $question->setTestId($this->id);
+            $question->save();
+        }
     }
 
     public function delete(): bool {
@@ -68,7 +63,7 @@ class Test extends ActiveRecord {
         $query = parent::$databaseObject->prepare("
                     DELETE FROM Test
                     WHERE id = :id;
-            ");
+        ");
         $query->bindParam(':id', $this->id);
         return $query->execute();
     }
@@ -79,7 +74,7 @@ class Test extends ActiveRecord {
                     SELECT * 
                     FROM Test
                     WHERE id = :id;
-            ");
+        ");
         $query->bindParam(':id', $id);
         $query->execute();
         $resultSet = $query->fetch(PDO::FETCH_ASSOC);
@@ -89,7 +84,7 @@ class Test extends ActiveRecord {
 
         $newObject = new Test($resultSet["title"]);
         $newObject->setId($resultSet["id"]);
-        //$newObject->findAllAnswers();
+        $newObject->setTestQuestions(TestQuestion::findAllByTestId($newObject->id));
 
         return $newObject;
     }
@@ -99,7 +94,7 @@ class Test extends ActiveRecord {
         $query = parent::$databaseObject->prepare("
                     SELECT * 
                     FROM Test;
-            ");
+        ");
         $query->execute();
         $resultSet = $query->fetchAll(PDO::FETCH_ASSOC);
 
@@ -110,7 +105,7 @@ class Test extends ActiveRecord {
         foreach ($resultSet as $row) {
             $newObject = new Test($row["title"]);
             $newObject->setId($row["id"]);
-            //$newObject->findAllAnswers();
+            $newObject->setTestQuestions(TestQuestion::findAllByTestId($newObject->id));
             $objects[] = $newObject;
         }
         return $objects;

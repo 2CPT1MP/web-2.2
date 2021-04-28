@@ -34,11 +34,16 @@ echo $res;
 //var_dump('<pre>', Answer::findAll(), '</pre>');
 
 require_once("../models/test.model/test-question.model.php");
-/*
+
+$t1 = new Test("Тестик 1");
 $q = new TestQuestion("Вопросик 1");
+$t1->addTestQuestion($q);
 $q->addRightAnswer(new Answer("Правильный ответик"));
 $q->addWrongAnswer(new Answer("НеПравильный ответик", "WRONG"));
-$q->save();
-*/
+$t1->save();
 
-var_dump('<pre>',TestQuestion::findAll(), '</pre>');
+
+var_dump('<pre>',Test::findAll(), '</pre>');
+
+foreach (Test::findAll() as $res)
+    $res->delete();
