@@ -33,8 +33,12 @@ echo $res;
 
 //var_dump('<pre>', Answer::findAll(), '</pre>');
 
-require_once("../models/test.model/test.model.php");
-$t = Test::findById(1);
-$t->delete();
+require_once("../models/test.model/test-question.model.php");
+/*
+$q = new TestQuestion("Вопросик 1");
+$q->addRightAnswer(new Answer("Правильный ответик"));
+$q->addWrongAnswer(new Answer("НеПравильный ответик", "WRONG"));
+$q->save();
+*/
 
-var_dump(Test::findAll());
+var_dump('<pre>',TestQuestion::findAll(), '</pre>');

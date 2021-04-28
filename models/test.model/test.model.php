@@ -116,7 +116,7 @@ class Test extends ActiveRecord {
         return $objects;
     }
 
-    private static function sync() {
+    public static function sync() {
         $query = parent::$databaseObject->prepare("
                     CREATE TABLE IF NOT EXISTS Test(
                         id INTEGER PRIMARY KEY AUTO_INCREMENT,

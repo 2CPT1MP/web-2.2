@@ -128,7 +128,7 @@ class Answer extends ActiveRecord {
     }
 
     public static function findAllByQuestionId(int $questionId): array {
-        return self::findBy("questionId", $questionId, true);
+        return self::findBy("testQuestionId", $questionId, true);
     }
 
     public static function findAll(): array {
