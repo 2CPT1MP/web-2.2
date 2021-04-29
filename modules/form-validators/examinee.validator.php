@@ -1,5 +1,5 @@
 <?php require_once('person.validator.php');
-require_once(__DIR__ . "/../../models/test.model/test-results.model.php");
+//require_once(__DIR__ . "/../../models/test.model/test-results.model.php");
 
 class ExamineeValidator extends PersonValidator {
     private $formData;

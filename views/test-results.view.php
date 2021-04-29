@@ -1,5 +1,5 @@
 <?php require_once('header.view.php');
-require_once("../models/test.model/test-results.model.php");
+//require_once("../models/test.model/test-results.model.php");
 require_once("../models/test.model/test-question.model.php");
 
 class TestResultsView {

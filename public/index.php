@@ -31,19 +31,9 @@ $rootRouter->addController('/history', new HistoryController());
 $res = $rootRouter->processRequest($request);
 echo $res;
 
-//var_dump('<pre>', Answer::findAll(), '</pre>');
-
-require_once("../models/test.model/test-question.model.php");
-
-$t1 = new Test("Тестик 1");
-$q = new TestQuestion("Вопросик 1");
-$t1->addTestQuestion($q);
-$q->addRightAnswer(new Answer("Правильный ответик"));
-$q->addWrongAnswer(new Answer("НеПравильный ответик", "WRONG"));
-$t1->save();
-
-
-var_dump('<pre>',Test::findAll(), '</pre>');
-
-foreach (Test::findAll() as $res)
-    $res->delete();
+require_once("../models/test.model/result.model.php");
+//$r = new Result("res 1");
+//$r->save();
+$r1 = Result::findById(1);
+$r1->delete();
+var_dump(Result::findById(1));
