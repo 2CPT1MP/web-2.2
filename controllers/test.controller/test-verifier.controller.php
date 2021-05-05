@@ -2,7 +2,6 @@
 require_once(__DIR__ . '/../../views/test-results.view.php');
 
 class TestVerifierController implements Controller {
-
     public function processRequest($request): string {
         if ($request->getMethod() === 'POST') {
             $validator = new ExamineeValidator($request->getBody());

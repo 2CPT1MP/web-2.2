@@ -61,7 +61,7 @@ class Answer extends ActiveRecord {
             $query->bindParam(':testQuestionId', $this->testQuestionId);
             $query->bindParam(':resultId', $this->resultId);
             $res = $query->execute();
-            var_dump(parent::$databaseObject->lastInsertId());
+            //var_dump(parent::$databaseObject->lastInsertId());
             $this->setId(parent::$databaseObject->lastInsertId());
             return $res;
         }

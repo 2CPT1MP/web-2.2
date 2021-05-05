@@ -11,13 +11,11 @@ class Result extends ActiveRecord {
 
     public function setAnswers(array $testQuestions): void {
         foreach ($testQuestions as $question) {
-            $question->setType("ACTUAL");
             $question->setResultId($this->id);
         }
         $this->answers = $testQuestions;
     }
     public function addAnswer(Answer $answer): void {
-        $answer->setType("ACTUAL");
         $answer->setResultId($this->id);
         $this->answers[] = $answer;
     }
@@ -52,7 +50,7 @@ class Result extends ActiveRecord {
         ");
 
         $query->bindParam(':id', $this->id);
-        var_dump($this->id);
+        //var_dump($this->id);
         $this->saveAnswers();
         return $query->execute();
     }
@@ -60,7 +58,7 @@ class Result extends ActiveRecord {
     private function saveAnswers() {
         foreach ($this->answers as $answer) {
             $answer->setResultId($this->id);
-            var_dump($answer);
+            //var_dump($answer);
             $answer->save();
         }
     }
@@ -78,7 +76,7 @@ class Result extends ActiveRecord {
         return $query->execute();
     }
 
-    public static function findById(int $id): ActiveRecord | null {
+    public static function findById(int $id): Result | null {
         self::sync();
         $query = parent::$databaseObject->prepare("
                     SELECT * 

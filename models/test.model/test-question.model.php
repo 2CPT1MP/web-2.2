@@ -64,7 +64,7 @@ class TestQuestion extends ActiveRecord {
 
         $query = parent::$databaseObject->prepare("
                     UPDATE TestQuestion 
-                    SET type = :type, text = :text, testId = :testId
+                    SET type = :type, question = :question, testId = :testId
                     WHERE id = :id;
             ");
         $query->bindParam(':type', $this->type);

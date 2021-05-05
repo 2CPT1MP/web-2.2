@@ -49,6 +49,15 @@ if (count(Test::findAll()) < 1) {
     $q2->addWrongAnswer(new Answer("Неправильный ответ 1", "WRONG"));
     $test->addTestQuestion($q2);
 
+    $q3 = new TestQuestion("Вопрос 3", "RADIO");
+    $q3->addRightAnswer(new Answer("Правильный ответ 1"));
+    $q3->addWrongAnswer(new Answer("Неправильный ответ 1", "WRONG"));
+    $test->addTestQuestion($q3);
+
+    $q4 = new TestQuestion("Вопрос 4", "TEXT");
+    $q4->addRightAnswer(new Answer("Правильный ответ 1"));
+    $test->addTestQuestion($q4);
+
     $test->save();
 }
 

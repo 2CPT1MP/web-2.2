@@ -29,6 +29,7 @@ class TestView {
                 TESTVIEW;
 
         foreach ($test->getTestQuestions() as $testQuestion) {
+            //var_dump($testQuestion);
             $answers = array_merge($testQuestion->getRightAnswers(), $testQuestion->getWrongAnswers());
 
             $html .= match ($testQuestion->getType()) {
@@ -50,8 +51,11 @@ class TestView {
                       <select required name=\"{$title}[]\">
                       <option value='none' selected disabled>-</option>
             ";
-        foreach ($answers as $answer)
+        foreach ($answers as $answer) {
+            if ($answer->getResultId())
+                continue;
             $html .= "<option value=\"{$answer->getText()}\">{$answer->getText()}</option>";
+        }
 
         return $html . "</select>";
     }
@@ -61,8 +65,11 @@ class TestView {
                       <select multiple required name=\"{$title}[]\">
                       <option value='none' disabled>-</option>
             ";
-        foreach ($answers as $answer)
+        foreach ($answers as $answer) {
+            if ($answer->getResultId())
+                continue;
             $html .= "<option value=\"{$answer->getText()}\">{$answer->getText()}</option>";
+        }
 
         return $html . "</select>";
     }
@@ -76,8 +83,11 @@ class TestView {
 
     public static function showRadio(string $title, array $answers): string {
         $html = "<label>$title<br>";
-        foreach ($answers as $answer)
+        foreach ($answers as $answer) {
+            if ($answer->getResultId())
+                continue;
             $html .= "<input required type='radio' name=\"{$title}[]\" value=\"{$answer->getText()}\"> {$answer->getText()}<br>";
+        }
 
         return $html . "</label>";
     }

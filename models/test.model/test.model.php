@@ -104,7 +104,10 @@ class Test extends ActiveRecord {
         foreach ($resultSet as $row) {
             $newObject = new Test($row["title"]);
             $newObject->setId($row["id"]);
-            $newObject->setTestQuestions(TestQuestion::findAllByTestId($newObject->id));
+
+            $questions = TestQuestion::findAllByTestId($newObject->id);
+            //var_dump($questions);
+            $newObject->setTestQuestions($questions);
             $objects[] = $newObject;
         }
         return $objects;

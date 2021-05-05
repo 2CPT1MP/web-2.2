@@ -43,17 +43,50 @@ class ExamineeValidator extends PersonValidator {
         $testResult = new Result("Результат");
 
         foreach ($questions as $question) {
+            //var_dump($question);
             if (!isset($this->formData[str_replace(' ', '_', $question->getQuestion())])) {
                 $answer = new Answer("Нет ответа", "WRONG");
                 $answer->setTestQuestionId($question->getId());
                 $testResult->addAnswer($answer);
+
             }
             else {
                 $formAnswersArray = $this->formData[str_replace(' ', '_', $question->getQuestion())];
+                //var_dump("<pre>", $formAnswersArray, "</pre>");
+                $rightAnswers =  $question->getRightAnswers();
+                $wrongAnswers =  $question->getWrongAnswers();
+                //
                 foreach ($formAnswersArray as $formTextAnswer) {
-                    $answer = new Answer($formTextAnswer, "ACTUAL");
-                    $answer->setTestQuestionId($question->getId());
-                    $testResult->addAnswer($answer);
+                    $notFound = true;
+                    foreach ($rightAnswers as $rightAnswer) {
+                        if ($rightAnswer->getText() === $formTextAnswer) {
+                            $answer = new Answer($formTextAnswer);
+                            $answer->setType("RIGHT");
+                            $answer->setTestQuestionId($question->getId());
+                            $testResult->addAnswer($answer);
+                            $notFound = false;
+                            break;
+                        }
+                    }
+
+                    foreach ($wrongAnswers as $wrongAnswer) {
+                        if ($wrongAnswer->getText() === $formTextAnswer) {
+                            $answer = new Answer($formTextAnswer);
+                            $answer->setType("WRONG");
+                            $answer->setTestQuestionId($question->getId());
+                            $testResult->addAnswer($answer);
+                            $notFound = false;
+                            break;
+                        }
+                    }
+
+                    if ($notFound) {
+                        $answer = new Answer($formTextAnswer);
+                        $answer->setType("WRONG");
+                        $answer->setTestQuestionId($question->getId());
+                        $testResult->addAnswer($answer);
+                    }
+
                 }
             }
         }
