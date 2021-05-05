@@ -25,10 +25,7 @@ class ExamineeValidator extends PersonValidator {
                 $msg .= "{$this->errors[$field]}<br>";
             }
         }
-
-        if ($valid)
-            return [true, $this->verifyResults()];
-        return [false, "$msg"];
+        return [$valid, "$msg"];
     }
 
     public function isValidGroupName($groupName): bool {
@@ -40,28 +37,26 @@ class ExamineeValidator extends PersonValidator {
         return is_numeric($age) && $age > 16 && $age < 150;
     }
 
-    public function verifyResults(): TestResults {
-        $student = new Student();
-        $test = $student->getTest();
+    public function verifyResults($formData): Result {
+        $test = Test::findById($formData["test-id"]);
         $questions = $test->getTestQuestions();
-        $testResult = new TestResults();
+        $testResult = new Result("Результат");
 
         foreach ($questions as $question) {
-
-            if (!isset($this->formData[str_replace(' ', '_', $question->getQuestion())]))
-                $newAnswer = new TestAnswer($question, []);
+            if (!isset($this->formData[str_replace(' ', '_', $question->getQuestion())])) {
+                $answer = new Answer("Нет ответа", "WRONG");
+                $answer->setTestQuestionId($question->getId());
+                $testResult->addAnswer($answer);
+            }
             else {
                 $formAnswersArray = $this->formData[str_replace(' ', '_', $question->getQuestion())];
-                $resultingAnswersArray = [];
-                foreach ($formAnswersArray as $formTextAnswer)
-                    $resultingAnswersArray[] = new Answer($formTextAnswer);
-
-                $newAnswer = new TestAnswer($question, $resultingAnswersArray);
+                foreach ($formAnswersArray as $formTextAnswer) {
+                    $answer = new Answer($formTextAnswer, "ACTUAL");
+                    $answer->setTestQuestionId($question->getId());
+                    $testResult->addAnswer($answer);
+                }
             }
-            var_dump('<pre>', $newAnswer,'</pre><hr>');
-            $testResult->addAnswer($newAnswer);
         }
-        //$testResult->save();
         return $testResult;
     }
 }

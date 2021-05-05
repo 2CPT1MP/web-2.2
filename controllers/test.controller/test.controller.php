@@ -7,8 +7,8 @@ class TestController implements Controller {
 
     public function processRequest($request): string {
         if ($request->getMethod() === 'GET') {
-            $student = new Student();
-            return $this->showTest($student->getTest());
+            $test = Test::findById(1);
+            return $this->showTest($test);
         }
         return "<p>Handler was not found</p>";
     }

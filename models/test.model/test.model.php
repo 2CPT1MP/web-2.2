@@ -31,7 +31,6 @@ class Test extends ActiveRecord {
             $query->bindParam(':title', $this->title);
 
             $res = $query->execute();
-            var_dump(parent::$databaseObject->lastInsertId());
             $this->setId(parent::$databaseObject->lastInsertId());
             $this->saveQuestions();
             return $res;
@@ -68,7 +67,7 @@ class Test extends ActiveRecord {
         return $query->execute();
     }
 
-    public static function findById(int $id): ActiveRecord | null {
+    public static function findById(int $id): Test | null {
         self::sync();
         $query = parent::$databaseObject->prepare("
                     SELECT * 

@@ -6,11 +6,15 @@ class TestVerifierController implements Controller {
     public function processRequest($request): string {
         if ($request->getMethod() === 'POST') {
             $validator = new ExamineeValidator($request->getBody());
-            $result = $validator->validate();
+            $res = $validator->validate();
 
-            if ($result[0])
-                return TestResultsView::render($result[1]);
-            return MessageView::render('Тест не пройден', $validator->validate()[1]);
+            if (!$res[0])
+                return MessageView::render('Тест не пройден', $res[1]);
+
+            $result = $validator->verifyResults($request->getBody());
+            $result->save();
+
+            return MessageView::render("<a href='/test/result?id={$result->getId()}'>Просмотреть результат теста</a>", $res[1]);
         }
         return "<p>Handler was not found</p>";
     }

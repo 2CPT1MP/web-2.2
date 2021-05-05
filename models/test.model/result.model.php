@@ -9,8 +9,18 @@ class Result extends ActiveRecord {
     public function getTitle(): string | null { return $this->title; }
     public function setTitle(string $title): void { $this->title = $title; }
 
-    public function setAnswers(array $testQuestions): void { $this->answers = $testQuestions; }
-    public function addAnswer(Answer $answer): void { $this->answers[] = $answer; }
+    public function setAnswers(array $testQuestions): void {
+        foreach ($testQuestions as $question) {
+            $question->setType("ACTUAL");
+            $question->setResultId($this->id);
+        }
+        $this->answers = $testQuestions;
+    }
+    public function addAnswer(Answer $answer): void {
+        $answer->setType("ACTUAL");
+        $answer->setResultId($this->id);
+        $this->answers[] = $answer;
+    }
     public function getAnswers(): array { return $this->answers; }
 
     public function getId(): ?int { return $this->id; }
@@ -28,11 +38,10 @@ class Result extends ActiveRecord {
                 VALUES(:title);
             ");
             $query->bindParam(':title', $this->title);
-
             $res = $query->execute();
-            var_dump(parent::$databaseObject->lastInsertId());
             $this->setId(parent::$databaseObject->lastInsertId());
-            //$this->saveQuestions();
+
+            $this->saveAnswers();
             return $res;
         }
 
@@ -43,13 +52,15 @@ class Result extends ActiveRecord {
         ");
 
         $query->bindParam(':id', $this->id);
-        //$this->saveAnswers();
+        var_dump($this->id);
+        $this->saveAnswers();
         return $query->execute();
     }
 
     private function saveAnswers() {
         foreach ($this->answers as $answer) {
             $answer->setResultId($this->id);
+            var_dump($answer);
             $answer->save();
         }
     }
@@ -83,7 +94,7 @@ class Result extends ActiveRecord {
 
         $newObject = new Result($resultSet["title"]);
         $newObject->setId($resultSet["id"]);
-        //$newObject->setTestQuestions(TestQuestion::findAllByTestId($newObject->id));
+        $newObject->setAnswers(Answer::findAllByResultId($newObject->id));
 
         return $newObject;
     }
@@ -104,7 +115,7 @@ class Result extends ActiveRecord {
         foreach ($resultSet as $row) {
             $newObject = new Result($row["title"]);
             $newObject->setId($row["id"]);
-            //$newObject->setTestQuestions(TestQuestion::findAllByTestId($newObject->id));
+            $newObject->setAnswers(Answer::findAllByResultId($newObject->id));
             $objects[] = $newObject;
         }
         return $objects;

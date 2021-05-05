@@ -32,8 +32,29 @@ $res = $rootRouter->processRequest($request);
 echo $res;
 
 require_once("../models/test.model/result.model.php");
-//$r = new Result("res 1");
-//$r->save();
-$r1 = Result::findById(1);
-$r1->delete();
-var_dump(Result::findById(1));
+require_once("../models/test.model/test.model.php");
+require_once("../models/test.model/answer.model.php");
+require_once("../models/test.model/test-question.model.php");
+
+if (count(Test::findAll()) < 1) {
+    $test = new Test("Тест 1");
+    $q1 = new TestQuestion("Вопрос 1");
+    $q1->addRightAnswer(new Answer("Правильный ответ 1"));
+    $q1->addWrongAnswer(new Answer("Неправильный ответ 1", "WRONG"));
+    $test->addTestQuestion($q1);
+
+    $q2 = new TestQuestion("Вопрос 2", "MULTIPLE_SELECT");
+    $q2->addRightAnswer(new Answer("Правильный ответ 1"));
+    $q2->addRightAnswer(new Answer("Правильный ответ 2"));
+    $q2->addWrongAnswer(new Answer("Неправильный ответ 1", "WRONG"));
+    $test->addTestQuestion($q2);
+
+    $test->save();
+}
+
+//var_dump('<pre>', Result::findAll(), "</pre>");
+
+
+
+
+
