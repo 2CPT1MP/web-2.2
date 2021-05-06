@@ -35,6 +35,7 @@ class TestResultsView {
         $percent = round($actualScore / $maxScore * 100);
 
         $html .= "<h2>Итог: $actualScore/ $maxScore ($percent%)</h2>";
+        //var_dump('<pre>', $result, '</pre>');
         return "</section>" . $html;
     }
 }
