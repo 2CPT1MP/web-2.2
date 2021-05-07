@@ -1,8 +1,7 @@
 <?php require_once('person.validator.php');
-//require_once(__DIR__ . "/../../models/test.model/test-results.model.php");
 
 class ExamineeValidator extends PersonValidator {
-    private $formData;
+    private array $formData;
 
     public function __construct($formData) {
         parent::__construct($formData);
@@ -37,35 +36,45 @@ class ExamineeValidator extends PersonValidator {
         return is_numeric($age) && $age > 16 && $age < 150;
     }
 
+    private function isAnswerPresent(string $answerText, array $answers): bool {
+        foreach ($answers as $answer)
+            if ($answerText === $answer->getText())
+                return true;
+        return false;
+    }
+
+    private function getFormAnswersFor(string $question): array {
+        return $this->formData[str_replace(' ', '_', $question)];
+    }
+
+
     public function verifyResults($formData): Result {
         $test = Test::findById($formData["test-id"]);
         $questions = $test->getTestQuestions();
         $testResult = new Result("Результат");
 
-        //var_dump('<pre>', $questions, '</pre>');
         foreach ($questions as $question) {
-            $formAnswersArray = $this->formData[str_replace(' ', '_', $question->getQuestion())];
+            $formAnswersArray = $this->getFormAnswersFor($question->getQuestion());
             $rightAnswers =  $question->getRightAnswers();
             $found = false;
 
             foreach ($formAnswersArray as $selectedAnswer) {
                 foreach ($rightAnswers as $rightAnswer) {
                     if ($rightAnswer->getText() === $selectedAnswer) {
-                        $answer = new Answer($selectedAnswer);
-                        $answer->setType("RIGHT");
+                        $answer = new Answer($selectedAnswer, "RIGHT");
                         $answer->setTestQuestionId($question->getId());
-                        $testResult->addAnswer($answer);
+                        $answerIsPresent = $this->isAnswerPresent($selectedAnswer, $testResult->getAnswers());
+
+                        if (!$answerIsPresent)
+                            $testResult->addAnswer($answer);
                         $found = true;
-                        break;
                     }
                 }
-            }
-
-            if (!$found) {
-                $answer = new Answer("Нет ответа / Ответ не верен");
-                $answer->setType("WRONG");
-                $answer->setTestQuestionId($question->getId());
-                $testResult->addAnswer($answer);
+                if (!$found) {
+                    $answer = new Answer("Нет ответа / Ответ не верен", "WRONG");
+                    $answer->setTestQuestionId($question->getId());
+                    $testResult->addAnswer($answer);
+                }
             }
         }
         return $testResult;
