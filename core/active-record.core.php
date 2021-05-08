@@ -1,12 +1,8 @@
-<?php
+<?php require_once("filter.core.php");
 
 abstract class ActiveRecord {
     protected static PDO $databaseObject;
-
-    public abstract function save(): bool;
-    public abstract function delete(): bool;
-    public abstract static function findById(int $id): ActiveRecord | null;
-    public abstract static function findAll(): array;
+    public static function getDatabaseObject(): PDO { return self::$databaseObject; }
 
     public static function connect(): void {
         $dsn = 'mysql:dbname=student_db;host=127.0.0.1';
@@ -18,7 +14,37 @@ abstract class ActiveRecord {
                 [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
             );
         } catch (PDOException $e) {
-            echo 'Подключение не удалось: ' . $e->getMessage();
+            echo 'Cannot connect to the database' . $e->getMessage();
         }
+    }
+
+    public static function find(string $tableName,
+                                $syncFunction,
+                                $setterFunction,
+                                Filter $filter,
+                                bool $fetchAll): ActiveRecord | array | null {
+        $syncFunction();
+        $query = self::$databaseObject->prepare("
+            SELECT * 
+            FROM $tableName
+            {$filter->getSqlWhereCondition()};
+        ");
+
+        foreach ($filter->getConditions() as $field => $value)
+            $query->bindParam(":$field", $value);
+        $query->execute();
+
+        $resultSet = $query->fetchAll(PDO::FETCH_ASSOC);
+        if ($fetchAll) {
+            $objects = [];
+            foreach ($resultSet as $row)
+                $objects[] = $setterFunction($row);
+            return $objects;
+        }
+
+        if (!$resultSet || count($resultSet) < 1)
+            return null;
+
+        return $setterFunction($resultSet);
     }
 }
