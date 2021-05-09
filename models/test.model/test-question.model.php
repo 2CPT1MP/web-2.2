@@ -1,8 +1,9 @@
 <?php
 require_once(__DIR__ . "/../../core/active-record.core.php");
+require_once(__DIR__ . "/../../core/entity.core.php");
 require_once("test.model.php");
 
-class TestQuestion extends ActiveRecord {
+class TestQuestion implements IEntity {
     private int | null $id = null;
     private int | null $testId = null;
     private string $question;
@@ -45,119 +46,69 @@ class TestQuestion extends ActiveRecord {
         }
     }
 
+    public function createNew(): bool {
+        $query = ActiveRecord::getDatabaseObject()->prepare("
+            INSERT INTO TestQuestion(type, question, testId) 
+            VALUES(:type, :question, :testId);
+        ");
+
+        $this->bindValuesToQuery($query, false);
+        $res = $query->execute();
+        $this->setId(ActiveRecord::getDatabaseObject()->lastInsertId());
+        $this->saveAnswers();
+        return $res;
+    }
+
+    public function updateExisting(): bool {
+        $query = ActiveRecord::getDatabaseObject()->prepare("
+            UPDATE TestQuestion 
+            SET type = :type, question = :question, testId = :testId
+            WHERE id = :id;
+        ");
+
+        $this->bindValuesToQuery($query);
+        $this->saveAnswers();
+        return $query->execute();
+    }
+
     public function save(): bool {
         $this->sync();
-
-        if ($this->id === null) {
-            $query = parent::$databaseObject->prepare("
-                INSERT INTO TestQuestion(type, question, testId) 
-                VALUES(:type, :question, :testId);
-            ");
-            $query->bindParam(':type', $this->type);
-            $query->bindParam(':question', $this->question);
-            $query->bindParam(':testId', $this->testId);
-            $res = $query->execute();
-            $this->setId(parent::$databaseObject->lastInsertId());
-            $this->saveAnswers();
-            return $res;
-        }
-
-        $query = parent::$databaseObject->prepare("
-                    UPDATE TestQuestion 
-                    SET type = :type, question = :question, testId = :testId
-                    WHERE id = :id;
-            ");
-        $query->bindParam(':type', $this->type);
-        $query->bindParam(':question', $this->question);
-        $query->bindParam(':id', $this->id);
-        $query->bindParam(':testId', $this->testId);
-        return $query->execute();
+        return ($this->id)? $this->updateExisting() : $this->createNew();
     }
 
     public static function findAll(): array {
         self::sync();
-        $query = parent::$databaseObject->prepare("
-                    SELECT * 
-                    FROM TestQuestion;
-            ");
-        $query->execute();
-        $resultSet = $query->fetchAll(PDO::FETCH_ASSOC);
-
-        if (count($resultSet) < 1)
-            return [];
-
-        $objects = [];
-        foreach ($resultSet as $row) {
-            $newObject = new TestQuestion($row["question"]);
-            $newObject->setId($row["id"]);
-            $newObject->setTestId($row["testId"]);
-            $newObject->setType($row["type"]);
-            $newObject->findAllAnswers();
-            $objects[] = $newObject;
-        }
-        return $objects;
+        return self::find(new Filter());
     }
 
     public function delete(): bool {
         self::sync();
-        if ($this->id === null)
-            return false;
+        if ($this->id === null) return false;
 
-        $query = parent::$databaseObject->prepare("
-                    DELETE FROM TestQuestion
-                    WHERE id = :id;
-            ");
+        $query = ActiveRecord::getDatabaseObject()->prepare("
+            DELETE FROM TestQuestion
+            WHERE id = :id;
+        ");
         $query->bindParam(':id', $this->id);
         return $query->execute();
     }
 
-    private static function findBy(string $fieldName, $value, bool $fetchAll = false): ActiveRecord | array | null {
-        self::sync();
-        $query = parent::$databaseObject->prepare("
-                    SELECT * 
-                    FROM TestQuestion
-                    WHERE $fieldName = :value;
-            ");
-        $query->bindParam(':value', $value);
-        $query->execute();
-
-        if ($fetchAll) {
-            $objects = [];
-            $resultSet = $query->fetchAll(PDO::FETCH_ASSOC);
-            foreach ($resultSet as $row) {
-                $newObject = new TestQuestion($row["question"]);
-                $newObject->setId($row["id"]);
-                $newObject->setTestId($row["testId"]);
-                $newObject->setType($row["type"]);
-                $newObject->findAllAnswers();
-                $objects[] = $newObject;
-            }
-            return $objects;
-        }
-        $resultSet = $query->fetch(PDO::FETCH_ASSOC);
-
-        if (!$resultSet || count($resultSet) < 1)
-            return null;
-
-        $newObject = new TestQuestion($resultSet["question"]);
-        $newObject->setId($resultSet["id"]);
-        $newObject->setType($resultSet["type"]);
-
-        return $newObject;
-    }
-
-    public static function findById(int $id): ActiveRecord | null {
-        return self::findBy("id", $id);
+    public static function findById(int $id): TestQuestion | null {
+        $idFilter = new Filter();
+        $idFilter->addCondition("id", $id);
+        return self::find($idFilter, false);
     }
 
     public static function findAllByTestId(int $testId): array {
-        return self::findBy("testId", $testId, true);
+        $testIdFilter = new Filter();
+        $testIdFilter->addCondition("testId", $testId);
+
+        return self::find($testIdFilter);
     }
 
-    public function findAllAnswers(): void {
-        if ($this->id === null)
-            return;
-        $answers = Answer::findAllByQuestionId($this->id);
+    public function findAllAnswers(bool $includeResults = true): void {
+        if ($this->id === null) return;
+        $answers = Answer::findAllByQuestionId($this->id, $includeResults);
 
         foreach ($answers as $answer) {
             switch ($answer->getType()) {
@@ -171,17 +122,43 @@ class TestQuestion extends ActiveRecord {
         }
     }
 
+    public static function setRows($row): TestQuestion {
+        $newObject = new TestQuestion($row["question"]);
+        $newObject->setId($row["id"]);
+        $newObject->setTestId($row["testId"]);
+        $newObject->setType($row["type"]);
+        $newObject->findAllAnswers(false);
+        return $newObject;
+    }
+
+    private function bindValuesToQuery($query, bool $includeId = true): void {
+        if ($includeId)
+            $query->bindParam(":id", $this->id);
+        $query->bindParam(':type', $this->type);
+        $query->bindParam(':question', $this->question);
+        $query->bindParam(':testId', $this->testId);
+    }
+
     public static function sync() {
         Test::sync();
-        $query = parent::$databaseObject->prepare("
-                    CREATE TABLE IF NOT EXISTS TestQuestion(
-                        id INTEGER PRIMARY KEY AUTO_INCREMENT,
-                        type VARCHAR(50) NOT NULL CHECK 
-                            (type IN ('SINGLE_SELECT', 'MULTIPLE_SELECT', 'TEXT', 'RADIO')),
-                        question VARCHAR(1000),
-                        testId INTEGER,
-                        FOREIGN KEY (testId) REFERENCES Test(id) ON DELETE CASCADE );
-                    ");
+        $query = ActiveRecord::getDatabaseObject()->prepare("
+            CREATE TABLE IF NOT EXISTS TestQuestion(
+                id INTEGER PRIMARY KEY AUTO_INCREMENT,
+                type VARCHAR(50) NOT NULL CHECK 
+                    (type IN ('SINGLE_SELECT', 'MULTIPLE_SELECT', 'TEXT', 'RADIO')),
+                question VARCHAR(1000),
+                testId INTEGER,
+                FOREIGN KEY (testId) REFERENCES Test(id) ON DELETE CASCADE);
+        ");
         $query->execute();
+    }
+
+    static function find(Filter $filter, bool $fetchAll = true): TestQuestion | array {
+        return ActiveRecord::find("TestQuestion",
+            "TestQuestion::sync",
+            "TestQuestion::setRows",
+            $filter,
+            $fetchAll
+        );
     }
 }

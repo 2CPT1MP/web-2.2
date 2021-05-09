@@ -10,7 +10,6 @@ class TestResultsView {
         $number = 1;
 
         $maxScore = count($result->getAnswers());
-        //var_dump($result->getAnswers());
         $actualScore = 0;
 
         foreach ($result->getAnswers() as $answer) {
@@ -18,7 +17,6 @@ class TestResultsView {
         }
 
         foreach ($questions as $question) {
-            //var_dump($questions);
             $html .= "<h3>Вопрос $number</h3>";
 
             foreach ($question as $answer) {
@@ -32,10 +30,10 @@ class TestResultsView {
             }
             $number++;
         }
+
         $percent = round($actualScore / $maxScore * 100);
 
         $html .= "<h2>Итог: $actualScore/ $maxScore ($percent%)</h2>";
-        //var_dump('<pre>', $result, '</pre>');
         return "</section>" . $html;
     }
 }

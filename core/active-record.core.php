@@ -24,14 +24,15 @@ abstract class ActiveRecord {
                                 Filter $filter,
                                 bool $fetchAll): ActiveRecord | array | null {
         $syncFunction();
+
         $query = self::$databaseObject->prepare("
             SELECT * 
-            FROM $tableName
+            FROM $tableName 
             {$filter->getSqlWhereCondition()};
         ");
 
         foreach ($filter->getConditions() as $field => $value)
-            $query->bindParam(":$field", $value);
+            $query->bindValue(":$field", $value);
         $query->execute();
 
         $resultSet = $query->fetchAll(PDO::FETCH_ASSOC);

@@ -36,6 +36,7 @@ require_once("../models/test.model/test.model.php");
 require_once("../models/test.model/answer.model.php");
 require_once("../models/test.model/test-question.model.php");
 
+
 if (count(Test::findAll()) < 1) {
     $test = new Test("Тест 1");
     $q1 = new TestQuestion("Вопрос 1");
@@ -60,10 +61,3 @@ if (count(Test::findAll()) < 1) {
 
     $test->save();
 }
-
-//var_dump('<pre>', Result::findAll(), "</pre>");
-
-
-
-
-

@@ -29,7 +29,6 @@ class TestView {
                 TESTVIEW;
 
         foreach ($test->getTestQuestions() as $testQuestion) {
-            //var_dump($testQuestion);
             $answers = array_merge($testQuestion->getRightAnswers(), $testQuestion->getWrongAnswers());
 
             $html .= match ($testQuestion->getType()) {
@@ -78,16 +77,13 @@ class TestView {
         return "<label>$title
                  <input required type='text' name=\"{$title}[]\">
                  </label>
-            ";
+        ";
     }
 
     public static function showRadio(string $title, array $answers): string {
         $html = "<label>$title<br>";
-        foreach ($answers as $answer) {
-            if ($answer->getResultId())
-                continue;
+        foreach ($answers as $answer)
             $html .= "<input required type='radio' name=\"{$title}[]\" value=\"{$answer->getText()}\"> {$answer->getText()}<br>";
-        }
 
         return $html . "</label>";
     }

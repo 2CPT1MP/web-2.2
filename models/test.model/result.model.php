@@ -50,7 +50,6 @@ class Result extends ActiveRecord {
         ");
 
         $query->bindParam(':id', $this->id);
-        //var_dump($this->id);
         $this->saveAnswers();
         return $query->execute();
     }
@@ -58,7 +57,6 @@ class Result extends ActiveRecord {
     private function saveAnswers() {
         foreach ($this->answers as $answer) {
             $answer->setResultId($this->id);
-            //var_dump($answer);
             $answer->save();
         }
     }

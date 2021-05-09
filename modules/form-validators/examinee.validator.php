@@ -6,10 +6,8 @@ class ExamineeValidator extends PersonValidator {
     public function __construct($formData) {
         parent::__construct($formData);
         $this->formData = $formData;
-
         $this->validators["sender-age"] = isset($formData["sender-age"]) && $this->isValidAge($formData["sender-age"]);
         $this->errors["sender-age"] = "Неверный возраст";
-
         $this->validators["sender-group"] = isset($formData["sender-group"]) && $this->isValidGroupName($formData["sender-group"]);
         $this->errors["sender-group"] = "Неверный номер группы";
     }
@@ -38,8 +36,7 @@ class ExamineeValidator extends PersonValidator {
 
     private function isAnswerPresent(string $answerText, array $answers): bool {
         foreach ($answers as $answer)
-            if ($answerText === $answer->getText())
-                return true;
+            if ($answerText === $answer->getText()) return true;
         return false;
     }
 
@@ -56,22 +53,17 @@ class ExamineeValidator extends PersonValidator {
         foreach ($questions as $question) {
             $formAnswersArray = $this->getFormAnswersFor($question->getQuestion());
             $rightAnswers =  $question->getRightAnswers();
-            $found = false;
 
-            foreach ($formAnswersArray as $selectedAnswer) {
-                foreach ($rightAnswers as $rightAnswer) {
-                    if ($rightAnswer->getText() === $selectedAnswer) {
-                        $answer = new Answer($selectedAnswer, "RIGHT");
-                        $answer->setTestQuestionId($question->getId());
-                        $answerIsPresent = $this->isAnswerPresent($selectedAnswer, $testResult->getAnswers());
+            foreach ($rightAnswers as $rightAnswer) {
+                if (in_array($rightAnswer->getText(), $formAnswersArray)) {
+                    $answer = new Answer($rightAnswer->getText(), "RIGHT");
+                    $answer->setTestQuestionId($question->getId());
+                    //$answerIsPresent = $this->isAnswerPresent($rightAnswer->getText(), $testResult->getAnswers());
 
-                        if (!$answerIsPresent)
-                            $testResult->addAnswer($answer);
-                        $found = true;
-                    }
-                }
-                if (!$found) {
-                    $answer = new Answer("Нет ответа / Ответ не верен", "WRONG");
+                    //if (!$answerIsPresent)
+                    $testResult->addAnswer($answer);
+                } else {
+                    $answer = new Answer($rightAnswer->getText(), "WRONG");
                     $answer->setTestQuestionId($question->getId());
                     $testResult->addAnswer($answer);
                 }

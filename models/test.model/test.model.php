@@ -106,7 +106,6 @@ class Test extends ActiveRecord {
             $newObject->setId($row["id"]);
 
             $questions = TestQuestion::findAllByTestId($newObject->id);
-            //var_dump($questions);
             $newObject->setTestQuestions($questions);
             $objects[] = $newObject;
         }
