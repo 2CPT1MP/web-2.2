@@ -17,15 +17,18 @@ class TestResultsView {
         }
 
         foreach ($questions as $question) {
-            $html .= "<h3>Вопрос $number</h3>";
+            $testQuestionId = $question[0]->getTestQuestionId();
+            $testQuestion = TestQuestion::findById($testQuestionId);
+
+            $html .= "<h3>Вопрос $number: {$testQuestion->getQuestion()}</h3>";
 
             foreach ($question as $answer) {
                 if ($answer->getType() === "RIGHT") {
-                    $html .= "<input type='checkbox' checked disabled><span class='correct'> {$answer->getText()}</span><br>";
+                    $html .= "<input type='checkbox' checked disabled><span class='correct'> {$answer->getText()} (верный)</span><br>";
                     $actualScore++;
                 }
                 else {
-                    $html .= "<input type='checkbox' checked disabled><span class='wrong'> {$answer->getText()}</span><br>";
+                    $html .= "<input type='checkbox' disabled><span class='wrong'> {$answer->getText()} (не указан / неверен)</span><br>";
                 }
             }
             $number++;

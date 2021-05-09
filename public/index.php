@@ -39,24 +39,24 @@ require_once("../models/test.model/test-question.model.php");
 
 if (count(Test::findAll()) < 1) {
     $test = new Test("Тест 1");
-    $q1 = new TestQuestion("Вопрос 1");
-    $q1->addRightAnswer(new Answer("Правильный ответ 1"));
-    $q1->addWrongAnswer(new Answer("Неправильный ответ 1", "WRONG"));
+    $q1 = new TestQuestion("JS расшифровывается как");
+    $q1->addRightAnswer(new Answer("JavaScript"));
+    $q1->addWrongAnswer(new Answer("JackScript", "WRONG"));
     $test->addTestQuestion($q1);
 
-    $q2 = new TestQuestion("Вопрос 2", "MULTIPLE_SELECT");
-    $q2->addRightAnswer(new Answer("Правильный ответ 1"));
-    $q2->addRightAnswer(new Answer("Правильный ответ 2"));
-    $q2->addWrongAnswer(new Answer("Неправильный ответ 1", "WRONG"));
+    $q2 = new TestQuestion("Допустимые имена переменных", "MULTIPLE_SELECT");
+    $q2->addRightAnswer(new Answer("var1"));
+    $q2->addRightAnswer(new Answer("_var1"));
+    $q2->addWrongAnswer(new Answer("1_var", "WRONG"));
     $test->addTestQuestion($q2);
 
-    $q3 = new TestQuestion("Вопрос 3", "RADIO");
-    $q3->addRightAnswer(new Answer("Правильный ответ 1"));
-    $q3->addWrongAnswer(new Answer("Неправильный ответ 1", "WRONG"));
+    $q3 = new TestQuestion("PC расшифровывается как", "RADIO");
+    $q3->addRightAnswer(new Answer("Personal Computer"));
+    $q3->addWrongAnswer(new Answer("Personal Calculator", "WRONG"));
     $test->addTestQuestion($q3);
 
-    $q4 = new TestQuestion("Вопрос 4", "TEXT");
-    $q4->addRightAnswer(new Answer("Правильный ответ 1"));
+    $q4 = new TestQuestion("SQL расшифровывается как", "TEXT");
+    $q4->addRightAnswer(new Answer("Structured Query Language"));
     $test->addTestQuestion($q4);
 
     $test->save();

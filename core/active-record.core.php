@@ -22,7 +22,7 @@ abstract class ActiveRecord {
                                 $syncFunction,
                                 $setterFunction,
                                 Filter $filter,
-                                bool $fetchAll): ActiveRecord | array | null {
+                                bool $fetchAll): IEntity | array | null {
         $syncFunction();
 
         $query = self::$databaseObject->prepare("
@@ -35,13 +35,15 @@ abstract class ActiveRecord {
             $query->bindValue(":$field", $value);
         $query->execute();
 
-        $resultSet = $query->fetchAll(PDO::FETCH_ASSOC);
+
         if ($fetchAll) {
+            $resultSet = $query->fetchAll(PDO::FETCH_ASSOC);
             $objects = [];
             foreach ($resultSet as $row)
                 $objects[] = $setterFunction($row);
             return $objects;
         }
+        $resultSet = $query->fetch(PDO::FETCH_ASSOC);
 
         if (!$resultSet || count($resultSet) < 1)
             return null;
