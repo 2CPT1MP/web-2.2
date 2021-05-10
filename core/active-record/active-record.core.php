@@ -4,6 +4,9 @@ abstract class ActiveRecord {
     protected static PDO $databaseObject;
     public static function getDatabaseObject(): PDO { return self::$databaseObject; }
 
+    /**
+     * Establishes connection to the database
+     */
     public static function connect(): void {
         $dsn = 'mysql:dbname=student_db;host=127.0.0.1';
         $username = 'root';

@@ -1,5 +1,5 @@
 <?php
-require_once(__DIR__ . "/../../core/controller.core.php");
+require_once(__DIR__ . "/../../core/routing/controller.core.php");
 require_once(__DIR__ . "/../../views/contact.view.php");
 
 class ContactController extends RestController {

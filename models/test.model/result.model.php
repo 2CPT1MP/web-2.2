@@ -1,5 +1,5 @@
 <?php require_once('answer.model.php');
-require_once(__DIR__ . "/../../core/active-record.core.php");
+require_once(__DIR__ . "/../../core/active-record/active-record.core.php");
 
 class Result extends ActiveRecord {
     private array $answers = [];

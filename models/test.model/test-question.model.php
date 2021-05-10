@@ -1,6 +1,6 @@
 <?php
-require_once(__DIR__ . "/../../core/active-record.core.php");
-require_once(__DIR__ . "/../../core/entity.core.php");
+require_once(__DIR__ . "/../../core/active-record/active-record.core.php");
+require_once(__DIR__ . "/../../core/active-record/entity.core.php");
 require_once("test.model.php");
 
 class TestQuestion implements IEntity {

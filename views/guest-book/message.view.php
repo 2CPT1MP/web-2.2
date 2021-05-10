@@ -1,4 +1,4 @@
-<?php require_once('header.view.php');
+<?php require_once(__DIR__ . '/../header.view.php');
 
 class MessageView {
     public static function render(string $title, string $text): string {

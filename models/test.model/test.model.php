@@ -1,5 +1,5 @@
 <?php require_once('test-question.model.php');
-require_once(__DIR__ . "/../../core/active-record.core.php");
+require_once(__DIR__ . "/../../core/active-record/active-record.core.php");
 
 class Test extends ActiveRecord {
     private array $testQuestions = [];

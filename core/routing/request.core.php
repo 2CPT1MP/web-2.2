@@ -1,4 +1,4 @@
-<?php require_once('url-parser.core.php');
+<?php require_once('util/url-parser.core.php');
 
 class Request {
     private string $method;

@@ -1,5 +1,5 @@
 <?php require_once(__DIR__ . '/../../modules/form-validators/examinee.validator.php');
-require_once(__DIR__ . '/../../views/test-results.view.php');
+require_once(__DIR__ . '/../../views/test/test-results.view.php');
 
 class TestVerifierController implements Controller {
     public function processRequest($request): string {

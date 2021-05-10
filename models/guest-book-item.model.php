@@ -1,5 +1,5 @@
 <?php
-require_once('../core/active-record.core.php');
+require_once('../core/active-record/active-record.core.php');
 
 class GuestBookItem extends ActiveRecord {
     private static string $FILE_NAME = '../files/messages.inc';

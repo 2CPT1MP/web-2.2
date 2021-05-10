@@ -1,6 +1,6 @@
 <?php
-require_once(__DIR__ . "/../../core/controller.core.php");
-require_once(__DIR__ . "/../../views/upload-messages.view.php");
+require_once(__DIR__ . "/../../core/routing/controller.core.php");
+require_once(__DIR__ . "/../../views/guest-book/upload-messages.view.php");
 
 class MessagesController extends RestController {
 

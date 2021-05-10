@@ -1,4 +1,4 @@
-<?php require_once(__DIR__ . '/../../views/test.view.php');
+<?php require_once(__DIR__ . '/../../views/test/test.view.php');
 
 class TestController implements Controller {
     public function showTest(Test $test): string {

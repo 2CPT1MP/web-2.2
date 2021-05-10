@@ -1,7 +1,7 @@
 <?php
-require_once(__DIR__ . "/../../core/active-record.core.php");
+require_once(__DIR__ . "/../../core/active-record/active-record.core.php");
 require_once(__DIR__ . "/../../models/test.model/result.model.php");
-require_once(__DIR__ . "/../../core/entity.core.php");
+require_once(__DIR__ . "/../../core/active-record/entity.core.php");
 
 class Answer implements IEntity {
     private string $type = "RIGHT";

@@ -1,6 +1,6 @@
 <?php
 require_once(__DIR__ . '/../../modules/form-validators/contact.validator.php');
-require_once(__DIR__ . '/../../views/message.view.php');
+require_once(__DIR__ . '/../../views/guest-book/message.view.php');
 require_once(__DIR__ . '/../../models/guest-book-item.model.php');
 
 class ContactVerifierController extends RestController {

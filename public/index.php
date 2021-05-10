@@ -1,10 +1,16 @@
 <?php
-require_once('../core/request.core.php');
 
-require_once('../core/router.core.php');
+/**
+ * Core MVC functionality modules
+ */
+require_once('../core/routing/request.core.php');
+require_once('../core/routing/router.core.php');
+
+/**
+ * User-defined Routers/Controllers
+ */
 require_once('../routes/contact.route.php');
 require_once('../routes/test.route.php');
-
 require_once('../controllers/index.controller.php');
 require_once('../controllers/history.controller.php');
 require_once('../controllers/bio.controller.php');
@@ -12,7 +18,8 @@ require_once('../controllers/interests.controller.php');
 require_once('../controllers/studies.controller.php');
 require_once('../controllers/photos.controller.php');
 require_once('../controllers/test.controller/test-verifier.controller.php');
-require_once('../core/active-record.core.php');
+require_once('../core/active-record/active-record.core.php');
+
 
 $request = new Request();
 $rootRouter = new Router();
@@ -31,11 +38,14 @@ $rootRouter->addController('/history', new HistoryController());
 $res = $rootRouter->processRequest($request);
 echo $res;
 
+
+/**
+ * !!! The code provided under this comment is intended for TESTING ONLY !!!
+ */
 require_once("../models/test.model/result.model.php");
 require_once("../models/test.model/test.model.php");
 require_once("../models/test.model/answer.model.php");
 require_once("../models/test.model/test-question.model.php");
-
 
 if (count(Test::findAll()) < 1) {
     $test = new Test("Тест 1");

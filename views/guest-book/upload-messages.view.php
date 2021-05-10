@@ -1,4 +1,4 @@
-<?php require_once('header.view.php');
+<?php require_once(__DIR__ . '/../header.view.php');
 
 class UploadMessagesView {
     public static function render(): string {
@@ -11,7 +11,6 @@ class UploadMessagesView {
                     <label id="file-label">Выберите файл сообщений<br>
                         <input name="messages" type="file" required autocomplete="off" accept=".inc">
                     </label>
-                   
                     <button id='submit-btn' type="submit" onsubmit="">Submit</button>
                 </form>
             </article>
