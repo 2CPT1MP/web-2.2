@@ -13,8 +13,9 @@ class TestVerifierController implements Controller {
             $result = $validator->verifyResults($request->getBody());
             $result->save();
 
-            return MessageView::render("<a href='/test/result?id={$result->getId()}'>Просмотреть результат теста</a>", $res[1]);
+            return MessageView::render("Проверка теста", "<a href='/test/result?id={$result->getId()}'>Просмотреть результат теста</a>" . $res[1]);
         }
-        return "<p>Handler was not found</p>";
+
+        return MessageView::render("Ошибка", "Неверное использование валидатора теста");
     }
 }
