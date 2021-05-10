@@ -1,21 +1,25 @@
 <?php require_once('../views/photos.view.php');
 
-class PhotosController implements Controller {
-    public function showPhotos(array $photos): string {
+class PhotosController extends RestController {
+    private function showPhotos(array $photos): string {
         return PhotosView::render($photos);
     }
 
-    public function processRequest($request): string {
-        if ($request->getMethod() === 'GET') {
-            if (isset($request->getParams()["id"])) {
-                header('Content-Type: image/png');
-                readfile("../images/backgrounds/{$request->getParams()["id"]}.png");
-                return "";
-            }
+    private function sendImage(int $id): bool {
+        header('Content-Type: image/png');
+        return readfile("../images/backgrounds/$id.png");
+    }
 
-            $student = new Student();
-            return $this->showPhotos($student->getPhotos());
+    public function GET(Request $request): string {
+        if (isset($request->getParams()["id"])) {
+            $res = $this->sendImage($request->getParams()["id"]);
+            return ($res)? "" : "Картинка не найдена";
         }
-        return "<p>Handler was not found</p>";
+        $student = new Student();
+        return $this->showPhotos($student->getPhotos());
+    }
+
+    public function POST(Request $request): string {
+        return MessageView::render("Ошибка", "Неверное использование");
     }
 }

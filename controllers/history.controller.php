@@ -1,14 +1,12 @@
 <?php require_once('../views/history.view.php');
 
-class HistoryController implements Controller {
-    public function showHistory(): string {
+class HistoryController extends RestController {
+
+    public function GET(Request $request): string {
         return HistoryView::render();
     }
 
-    public function processRequest($request): string {
-        if ($request->getMethod() === 'GET') {
-            return $this->showHistory();
-        }
-        return "<p>Handler was not found</p>";
+    public function POST(Request $request): string {
+        return MessageView::render("Ошибка", "Неверное использование");
     }
 }

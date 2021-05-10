@@ -2,15 +2,14 @@
 require_once('../views/index.view.php');
 require_once('../models/student.model.php');
 
-class IndexController implements Controller {
-    public function getIndex(): string {
+class IndexController extends RestController {
+
+    public function GET(Request $request): string {
         $student = new Student();
         return IndexView::render($student);
     }
 
-    public function processRequest($request): string {
-        if ($request->getMethod() === 'GET')
-            return $this->getIndex();
-        return "<p>Handler was not found</p>";
+    public function POST(Request $request): string {
+        return MessageView::render("Ошибка", "Неверное использование");
     }
 }

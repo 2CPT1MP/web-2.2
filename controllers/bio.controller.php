@@ -1,15 +1,13 @@
 <?php require_once('../views/bio.view.php');
 
-class BioController implements Controller {
-    public function showBio(Bio $bio): string {
-        return BioView::render($bio);
+class BioController extends RestController {
+
+    public function GET(Request $request): string {
+        $student = new Student();
+        return BioView::render($student->getBio());
     }
 
-    public function processRequest($request): string {
-        if ($request->getMethod() === 'GET') {
-            $student = new Student();
-            return $this->showBio($student->getBio());
-        }
-        return "<p>Handler was not found</p>";
+    public function POST(Request $request): string {
+        return MessageView::render("Ошибка", "Неверное использование");
     }
 }

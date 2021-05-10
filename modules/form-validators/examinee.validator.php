@@ -34,16 +34,9 @@ class ExamineeValidator extends PersonValidator {
         return is_numeric($age) && $age > 16 && $age < 150;
     }
 
-    private function isAnswerPresent(string $answerText, array $answers): bool {
-        foreach ($answers as $answer)
-            if ($answerText === $answer->getText()) return true;
-        return false;
-    }
-
     private function getFormAnswersFor(string $question): array {
         return $this->formData[str_replace(' ', '_', $question)];
     }
-
 
     public function verifyResults($formData): Result {
         $test = Test::findById($formData["test-id"]);
@@ -55,18 +48,12 @@ class ExamineeValidator extends PersonValidator {
             $rightAnswers =  $question->getRightAnswers();
 
             foreach ($rightAnswers as $rightAnswer) {
-                if (in_array($rightAnswer->getText(), $formAnswersArray)) {
+                if (in_array($rightAnswer->getText(), $formAnswersArray))
                     $answer = new Answer($rightAnswer->getText(), "RIGHT");
-                    $answer->setTestQuestionId($question->getId());
-                    //$answerIsPresent = $this->isAnswerPresent($rightAnswer->getText(), $testResult->getAnswers());
-
-                    //if (!$answerIsPresent)
-                    $testResult->addAnswer($answer);
-                } else {
+                else
                     $answer = new Answer($rightAnswer->getText(), "WRONG");
-                    $answer->setTestQuestionId($question->getId());
-                    $testResult->addAnswer($answer);
-                }
+                $answer->setTestQuestionId($question->getId());
+                $testResult->addAnswer($answer);
             }
         }
         return $testResult;
