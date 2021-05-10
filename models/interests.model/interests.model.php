@@ -2,6 +2,7 @@
 
 class Interests {
     private array $interests = [];
+    public function getInterests(): array { return $this->interests; }
 
     public function createCategory(string $categoryName): void {
         $this->interests[$categoryName] = new InterestsCategory($categoryName);
@@ -9,9 +10,5 @@ class Interests {
 
     public function addItemToCategory(string $categoryName, string $item): void {
         $this->interests[$categoryName]->addListItem($item);
-    }
-
-    public function getInterests(): array {
-        return $this->interests;
     }
 }

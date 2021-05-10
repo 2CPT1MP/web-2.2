@@ -1,10 +1,8 @@
 <?php
 require_once('bio.model/bio.model.php');
 require_once('interests.model/interests.model.php');
-
 require_once('studies.model/studies.model.php');
 require_once('studies.model/schedule-record.model.php');
-
 require_once('test.model/test.model.php');
 require_once('test.model/test-question.model.php');
 require_once('test.model/answer.model.php');
@@ -19,16 +17,22 @@ class Student {
     private Test $test;
     private array $photos  = [];
 
+    public function getName(): string { return $this->name; }
+    public function getBio(): Bio { return $this->bio; }
+    public function getInterests(): Interests { return $this->interests; }
+    public function getStudies(): Studies { return $this->studies; }
+    public function getGroup(): string { return $this->group; }
+    public function getLabTitle(): string { return $this->labTitle; }
+    public function getLabNum(): int { return $this->labNum; }
+    public function getPhotos(): array { return $this->photos; }
+    public function getTest(): Test { return $this->test; }
+    public function addPhoto(string $title, string $path): void { $this->photos[] = new Photo($title, $path); }
 
-    public function getPhotos(): array {
-        return $this->photos;
-    }
-
-    public function getTest(): Test {
-        return $this->test;
-    }
 
     public function __construct() {
+        /**
+        * !!! Sample data !!!
+        */
         $this->name = "Виниченко А.А.";
         $this->group = "ИС/б-18-2-о";
         $this->labNum = 1;
@@ -119,61 +123,5 @@ class Student {
 
         for ($index = 1; $index <= 15; $index++)
             $this->addPhoto("Изображение $index", "/photos?id=$index");
-        $this->test = new Test("Инфо");
-
-        $question1 = new TestQuestion("Операционной системой не является", 'MULTIPLE_SELECT');
-        $question1->addRightAnswer(new Answer("Word"));
-        $question1->addRightAnswer(new Answer("PowerPoint"));
-        $question1->addWrongAnswer(new Answer("Ubuntu"));
-
-        $question2 = new TestQuestion("Браузером  не является", "RADIO");
-        $question2->addWrongAnswer(new Answer("Internet Explorer"));
-        $question2->addRightAnswer(new Answer("VLC"));
-        $question2->addWrongAnswer(new Answer("Microsoft Edge"));
-
-        $question3 = new TestQuestion("Неправильным именем переменной является", "SINGLE_SELECT");
-        $question3->addWrongAnswer(new Answer("_var"));
-        $question3->addRightAnswer(new Answer("2var"));
-        $question3->addWrongAnswer(new Answer("var"));
-
-        $question4 = new TestQuestion("JS расшифровывается как", "TEXT");
-        $question4->addRightAnswer(new Answer("JavaScript"));
-
-        $this->test->addTestQuestion($question1);
-        $this->test->addTestQuestion($question2);
-        $this->test->addTestQuestion($question3);
-        $this->test->addTestQuestion($question4);
-    }
-
-    public function getName(): string {
-        return $this->name;
-    }
-
-    public function getBio(): Bio {
-        return $this->bio;
-    }
-
-    public function getInterests(): Interests {
-        return $this->interests;
-    }
-
-    public function getStudies(): Studies {
-        return $this->studies;
-    }
-
-    public function getGroup(): string {
-        return $this->group;
-    }
-
-    public function getLabTitle(): string {
-        return $this->labTitle;
-    }
-
-    public function getLabNum(): int {
-        return $this->labNum;
-    }
-
-    public function addPhoto(string $title, string $path): void {
-        $this->photos[] = new Photo($title, $path);
     }
 }
