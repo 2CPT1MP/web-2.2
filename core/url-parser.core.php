@@ -13,6 +13,8 @@ class UrlParser {
 
         foreach ($listOfParams as $value) {
             $pair = explode('=', $value);
+            if (!isset($pair[0]) || !isset($pair[1]))
+                continue;
             $parsedListOfParams[$pair[0]] = $pair[1];
         }
         return $parsedListOfParams;
