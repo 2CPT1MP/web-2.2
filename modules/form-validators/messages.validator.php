@@ -1,9 +1,11 @@
 <?php require_once('person.validator.php');
 
-class MessagesValidator extends PersonValidator
-{
-    public function __construct($formData)
-    {
+
+/*
+ * !!! Does not function as intended !!!
+ */
+class MessagesValidator extends PersonValidator {
+    public function __construct($formData) {
         parent::__construct($formData);
 
         $this->validators["sender-date"] = isset($formData["sender-day"]) && isset($formData["sender-month"]) && isset($formData["sender-year"]) &&
@@ -17,8 +19,7 @@ class MessagesValidator extends PersonValidator
         $this->errors["sender-phone"] = "Неверный телефон";
     }
 
-    public function validate(): array
-    {
+    public function validate(): array {
         $msg = "";
         $valid = true;
 
@@ -31,20 +32,17 @@ class MessagesValidator extends PersonValidator
         return [$valid, $msg];
     }
 
-    public function isValidEmail(string $email): bool
-    {
+    public function isValidEmail(string $email): bool {
         $validEmailPattern = '/^[A-Za-z0-9_]+[@][A-Za-z0-9_]+[.][A-Za-z0-9_]+$/';
         return preg_match($validEmailPattern, $email);
     }
 
-    public function isValidPhoneNumber(string $phoneNumber): bool
-    {
+    public function isValidPhoneNumber(string $phoneNumber): bool {
         $validPhoneNumberPattern = '/^[+][7|3][0-9]{9,11}$/';
         return preg_match($validPhoneNumberPattern, $phoneNumber);
     }
 
-    public function isValidDate($day, $month, $year): bool
-    {
+    public function isValidDate($day, $month, $year): bool {
         if (!is_numeric($day) || !is_numeric($month) || !is_numeric($year))
             return false;
         return checkdate($month, $day, $year);
