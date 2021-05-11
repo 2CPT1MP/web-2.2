@@ -27,7 +27,7 @@ class BlogEditorView {
         return $html . <<<EDITOR
             <article class="flex-container card">
             <h2>Добавить запись блога</h2>
-                <form id="contact-form" action="/blog/editor" method=POST autocomplete="off">
+                <form id="contact-form" action="/blog/editor" method=POST autocomplete="off" enctype="multipart/form-data">
                     <label for="topic" id="fio-label">Тема сообщения</label>
                     <input name="topic" id="topic" type="text" required autocomplete="off">
 
