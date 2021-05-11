@@ -11,6 +11,7 @@ require_once('../core/routing/router.core.php');
  */
 require_once('../routes/contact.route.php');
 require_once('../routes/test.route.php');
+require_once('../routes/blog.route.php');
 require_once('../controllers/index.controller.php');
 require_once('../controllers/history.controller.php');
 require_once('../controllers/bio.controller.php');
@@ -27,6 +28,7 @@ ActiveRecord::connect();
 
 $rootRouter->addRouter("/contact", new ContactRouter());
 $rootRouter->addRouter("/test", new TestRouter());
+$rootRouter->addRouter("/blog", new BlogRouter());
 
 $rootRouter->addController('/', new IndexController());
 $rootRouter->addController("/bio", new BioController());
@@ -71,3 +73,33 @@ if (count(Test::findAll()) < 1) {
 
     $test->save();
 }
+
+
+
+/*
+ * BlogMessage Unit test
+ */
+/*
+require_once("../models/blog-message.model.php");
+
+$newBlogMsg = new BlogMessage();
+$newBlogMsg->setTopic("Topic 1");
+$newBlogMsg->setText("Text 1");
+$newBlogMsg->setImagePath("/");
+$newBlogMsg->save();
+
+$id = $newBlogMsg->getId();
+$res1 = BlogMessage::findById($id);
+$res2 = BlogMessage::findAll();
+
+$newBlogMsg->setText("Modded Text 1");
+$newBlogMsg->save();
+$res1 = BlogMessage::findById($newBlogMsg->getId());
+$res2 = BlogMessage::findAll();
+
+$status = $newBlogMsg->delete();
+$status = BlogMessage::findById($id);
+$status = BlogMessage::findAll();
+$newBlogMsg->save();*/
+
+
