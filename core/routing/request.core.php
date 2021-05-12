@@ -12,7 +12,7 @@ class Request {
     public function __construct() {
         $this->method = $_SERVER["REQUEST_METHOD"];
         $this->setUrl($_SERVER["REQUEST_URI"]);
-        $this->body = array_merge($_GET, $_POST, $_FILES);
+        $this->body = array_merge($_POST, $_FILES);
     }
 
     public function shift(): void {

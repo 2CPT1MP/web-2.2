@@ -2,6 +2,7 @@
 require_once(__DIR__ . '/../core/active-record/entity.core.php');
 require_once(__DIR__ . '/../core/active-record/active-record.core.php');
 require_once(__DIR__ . '/../core/active-record/filter.core.php');
+require_once(__DIR__ . '/../core/active-record/order.core.php');
 
 class BlogMessage implements IEntity {
     private int | null $id = null;
@@ -135,7 +136,8 @@ class BlogMessage implements IEntity {
             "BlogMessage::sync",
             "BlogMessage::setRows",
             $filter,
-            $fetchAll
+            $fetchAll,
+            new DescendingOrder("timestamp")
         );
     }
 }

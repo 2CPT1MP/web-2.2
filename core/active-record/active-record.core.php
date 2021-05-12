@@ -21,19 +21,24 @@ abstract class ActiveRecord {
         }
     }
 
+
     public static function find(string $tableName,
                                 $syncFunction,
                                 $setterFunction,
                                 Filter $filter,
-                                bool $fetchAll): IEntity | array | null {
+                                bool $fetchAll,
+                                Order $order = null): IEntity | array | null {
         $syncFunction();
         $filterLimit = $filter->getLimit();
         $sqlLimit = ($filterLimit)? $filterLimit->toSql() : "";
+        $order = (!$order)? "" : $order->toSql();
 
         $query = self::$databaseObject->prepare("
             SELECT * 
             FROM $tableName 
             {$filter->getSqlWhereCondition()}
+            
+            $order
             $sqlLimit;
         ");
 

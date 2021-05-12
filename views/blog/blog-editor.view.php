@@ -1,4 +1,6 @@
-<?php require_once(__DIR__ . '/../header.view.php');
+<?php use JetBrains\PhpStorm\Pure;
+
+require_once(__DIR__ . '/../header.view.php');
 
 class BlogEditorView {
     /**@param BlogMessage[] $messages  */
