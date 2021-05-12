@@ -98,6 +98,14 @@ class BlogMessage implements IEntity {
         return ceil($recordCount / $recordsPerPage);
     }
 
+    public static function getCount(): int {
+        $query = "SELECT COUNT(*) FROM BlogMessage;";
+        $statement = ActiveRecord::getDatabaseObject()->query($query);
+        if (!$statement)
+            return 0;
+        return $statement->fetch(PDO::FETCH_NUM)[0];
+    }
+
     public static function setRows($row): BlogMessage {
         $newObject = new BlogMessage();
         $newObject->setId($row["id"]);
