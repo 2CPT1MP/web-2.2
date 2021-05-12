@@ -27,11 +27,14 @@ abstract class ActiveRecord {
                                 Filter $filter,
                                 bool $fetchAll): IEntity | array | null {
         $syncFunction();
+        $filterLimit = $filter->getLimit();
+        $sqlLimit = ($filterLimit)? $filterLimit->toSql() : "";
 
         $query = self::$databaseObject->prepare("
             SELECT * 
             FROM $tableName 
-            {$filter->getSqlWhereCondition()};
+            {$filter->getSqlWhereCondition()}
+            $sqlLimit;
         ");
 
         foreach ($filter->getConditions() as $field => $value)

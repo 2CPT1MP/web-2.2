@@ -101,5 +101,3 @@ $status = $newBlogMsg->delete();
 $status = BlogMessage::findById($id);
 $status = BlogMessage::findAll();
 $newBlogMsg->save();*/
-
-

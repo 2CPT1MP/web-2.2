@@ -16,7 +16,7 @@ class BlogMessage implements IEntity {
 
     public function getId(): ?int { return $this->id; }
     public function getTopic(): string { return $this->topic; }
-    public function getImagePath(): string { return $this->imagePath; }
+    public function getImagePath(): string | null { return $this->imagePath; }
     public function getText(): string { return $this->text; }
     public function getTimestamp(): string { return $this->timestamp; }
 
@@ -33,6 +33,8 @@ class BlogMessage implements IEntity {
         $this->setId(ActiveRecord::getDatabaseObject()->lastInsertId());
         return $res;
     }
+
+    public function hasImage(): bool { return $this->imagePath !== null; }
 
     private function updateExisting(): bool {
         $this->timestamp = date('Y-m-d H:i:s');
@@ -78,12 +80,30 @@ class BlogMessage implements IEntity {
         return self::find(new Filter());
     }
 
+    static function findAllForPage(int $page, int $recordsPerPage): array {
+        self::sync();
+        $filter = new Filter();
+        $filter->setLimit(new Limit($page, $recordsPerPage));
+        return self::find($filter);
+    }
+
+    public static function getPageCount(int $recordsPerPage): int {
+        $query = "SELECT COUNT(*) FROM BlogMessage;";
+        $statement = ActiveRecord::getDatabaseObject()->query($query);
+        if (!$statement)
+            return 0;
+        $recordCount = $statement->fetch(PDO::FETCH_NUM)[0];
+
+        return ceil($recordCount / $recordsPerPage);
+    }
+
     public static function setRows($row): BlogMessage {
         $newObject = new BlogMessage();
         $newObject->setId($row["id"]);
         $newObject->setTopic($row["topic"]);
         $newObject->setText($row["text"]);
-        $newObject->setImagePath($row["imagePath"]);
+        if (isset($row["imagePath"]))
+            $newObject->setImagePath($row["imagePath"]);
         $newObject->setTimestamp($row["timestamp"]);
         return $newObject;
     }

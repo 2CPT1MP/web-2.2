@@ -1,28 +1,41 @@
 <?php require_once(__DIR__ . '/../header.view.php');
 
 class BlogEditorView {
-    public static function render(): string {
+    /**@param BlogMessage[] $messages  */
+    public static function render(array $messages, int $pageCount, int $currentPage): string {
         $html = HeaderView::render('Редактор блога');
         $html .= '<section class="card">';
 
-        /*
-        $msgs = "<h2>Оставленные сообщения</h2><article class=''><table class='message-table'>";
-        $msgs .= "<a href='/contact/messages'><b>Загрузить файл сообщений</b></a>";
+        $msgs = "<h2>Оставленные сообщения</h2><article class=''>";
+        $pageInfo = "<table><tr><td>Страница</td>";
 
-        foreach ($messages as $message)
+        for ($i = 1; $i <= $pageCount; $i++) {
+            if ($currentPage === $i)
+                $pageInfo .= "<td><b><a href=\"/blog/editor?page=$i\">$i</a></b></td>";
+            else
+                $pageInfo .= "<td><a href=\"/blog/editor?page=$i\">$i</a></td>";
+        }
+        $pageInfo .= "</tr></table>";
+        $msgs .= $pageInfo;
+
+        foreach ($messages as $message) {
+            $hasImg = $message->hasImage();
+            $imagePath = ($hasImg)? $message->getImagePath() : "";
+
             $msgs .= "
                <div class='msg-block'>
-                {$message->getSaveDate()}<br>
-                <b>{$message->getName()}</b>
-                &lt;<i>{$message->getEmail()}</i>&gt;
-                <br>
-                {$message->getMessage()}<br>
-                <i>Телефон: {$message->getPhone()}</i>
-                
+                    <img src='/blog/userImage?id=$imagePath' width='50px' alt='Нет изображения'><br>
+                    <p class='no-margin'>{$message->getTimestamp()}</p>
+                    <b>{$message->getTopic()}</b><br>
+                    <p class='no-margin'>{$message->getText()}</p>
+                   
                </div>
             ";
+        }
 
-        $msgs .= "</table></article>";*/
+        $msgs .= "</article>";
+
+        //var_dump('<pre>', $messages, '</pre>');
 
         return $html . <<<EDITOR
             <article class="flex-container card">
@@ -40,6 +53,8 @@ class BlogEditorView {
                     <button id='submit-btn' type="submit" onsubmit="">Submit</button>
                 </form>
             </article>
+            $msgs
+            $pageInfo
         EDITOR;
     }
 }
