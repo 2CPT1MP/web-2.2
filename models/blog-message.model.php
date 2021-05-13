@@ -76,9 +76,20 @@ class BlogMessage implements IEntity {
         return self::find($idFilter);
     }
 
+    /** @return BlogMessage[] */
     static function findAll(): array {
         self::sync();
         return self::find(new Filter());
+    }
+
+    static function deleteAll(): bool {
+        $success = true;
+        foreach(BlogMessage::findAll() as $message) {
+            $result = $message->delete();
+            if (!$result)
+                $success = false;
+        }
+        return $success;
     }
 
     static function findAllForPage(int $page, int $recordsPerPage): array {

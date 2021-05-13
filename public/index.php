@@ -101,3 +101,10 @@ $status = $newBlogMsg->delete();
 $status = BlogMessage::findById($id);
 $status = BlogMessage::findAll();
 $newBlogMsg->save();*/
+/*
+require_once("../core/io/file-reader.core.php");
+
+$csvReader = new CSVFileReader("C:/Users/2CPT1/Desktop/untitled1/123.csv");
+$data = $csvReader->read();
+echo $data;*/
+

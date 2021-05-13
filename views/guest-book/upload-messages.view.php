@@ -8,10 +8,9 @@ class UploadMessagesView {
             <h2>Загрузить файл сообщений</h2>
             <article class="flex-container card">
                 <form id="contact-form" action="/contact/messages" method=POST autocomplete="off" enctype="multipart/form-data">
-                    <label id="file-label">Выберите файл сообщений<br>
-                        <input name="messages" type="file" required autocomplete="off" accept=".inc">
-                    </label>
-                    <button id='submit-btn' type="submit" onsubmit="">Submit</button>
+                    <label id="file-label">Выберите файл сообщений<br></label>
+                    <input id="messages" name="messages" type="file" required autocomplete="off" accept=".inc">
+                    <button id='submit-btn' type="submit">Загрузить</button>
                 </form>
             </article>
         MESSAGES;
