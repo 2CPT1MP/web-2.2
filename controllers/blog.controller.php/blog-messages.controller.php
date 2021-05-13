@@ -35,19 +35,21 @@ class BlogMessagesController extends RestController {
             return false;
 
         $file = $_FILES["blog-data"]["tmp_name"];
-        /*
-        if (!$this->validateMessagesFile($file))
-            return false;*/
-
+        $validator = new BlogMessageValidator();
         $fileReader = new CSVFileReader($file);
         BlogMessage::deleteAll();
 
         foreach ($fileReader->read() as $record) {
+            $result = $validator->validate($record);
+            if (!$result->isValid())
+                continue;
+
             $newBlogMessage = new BlogMessage();
             $newBlogMessage->setTopic($record["topic"]);
             $newBlogMessage->setText($record["text"]);
             $newBlogMessage->setImagePath($record["imagePath"]);
             $newBlogMessage->setTimestamp($record["timestamp"]);
+
             $newBlogMessage->save();
         }
 

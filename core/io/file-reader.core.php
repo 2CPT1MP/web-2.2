@@ -24,9 +24,10 @@ class CSVFileReader extends FileReader {
         $header = array_shift($rows);
         $csv = [];
 
-        foreach($rows as $row) {
-            $csv[] = array_combine($header, $row);
-        }
+        foreach($rows as $row)
+            if (count($header) === count($row))
+                $csv[] = array_combine($header, $row);
+
         return $csv;
     }
 }
