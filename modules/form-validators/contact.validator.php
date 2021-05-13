@@ -28,17 +28,17 @@ class ContactValidator extends PersonValidator {
         return [$valid, $msg];
     }
 
-    public function isValidEmail(string $email): bool {
+    public static function isValidEmail(string $email): bool {
         $validEmailPattern = '/^[A-Za-z0-9_]+[@][A-Za-z0-9_]+[.][A-Za-z0-9_]+$/';
         return preg_match($validEmailPattern, $email);
     }
 
-    public function isValidPhoneNumber(string $phoneNumber): bool {
+    public static function isValidPhoneNumber(string $phoneNumber): bool {
         $validPhoneNumberPattern = '/^[+][7|3][0-9]{9,11}$/';
         return preg_match($validPhoneNumberPattern, $phoneNumber);
     }
 
-    public function isValidDate($day, $month, $year): bool {
+    public static function isValidDate($day, $month, $year): bool {
         if (!is_numeric($day) || !is_numeric($month) || !is_numeric($year))
             return false;
         return checkdate($month, $day, $year);

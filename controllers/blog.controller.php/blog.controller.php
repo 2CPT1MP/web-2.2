@@ -34,30 +34,6 @@ class BlogController extends RestController {
     }
 
     public function POST(Request $request): string {
-        /*$messageBody = $request->getBody();
-        $validator = new BlogMessageValidator();
-        $validationResult = $validator->validate($messageBody);
-
-        if (!$validationResult->isValid())
-            return MessageView::render("Ошибка", $validationResult->getErrorMessage());
-
-        $newBlogMessage = new BlogMessage();
-        $newBlogMessage->setTopic($messageBody["topic"]);
-        $newBlogMessage->setText($messageBody["text"]);
-
-        if ($messageBody["image"] && $messageBody["image"]["size"] !== 0) {
-            $uniqueId = uniqid();
-            $uploadInfo = FileUploader::uploadFile("image", "../files/userImages/$uniqueId.png");
-            if ($uploadInfo->isSuccessful())
-                $newBlogMessage->setImagePath($uniqueId);
-            else
-                return MessageView::render("Ошибка", $validationResult->getErrorMessage());
-        }
-        $savedSuccessfully = $newBlogMessage->save();
-
-        if (!$savedSuccessfully)
-            return MessageView::render("Ошибка", $validationResult->getErrorMessage());
-        return MessageView::render("Успешное добавление", "Успешное добавление нового сообщения блога");*/
-        return "w";
+        return MessageView::render("Ошибка", "Неверное использование");
     }
 }

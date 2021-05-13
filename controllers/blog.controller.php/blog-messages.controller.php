@@ -6,29 +6,6 @@ require_once(__DIR__ . "/../../views/blog/upload-blog-messages.view.php");
 
 class BlogMessagesController extends RestController {
 
-    private function validateMessagesFile(string $fileName): bool {
-        $lines = file($fileName, FILE_SKIP_EMPTY_LINES | FILE_IGNORE_NEW_LINES);
-        $emptyFile = !$lines || count($lines) < 1;
-
-        if ($emptyFile)
-            return false;
-
-        foreach ($lines as $line) {
-            $fields = explode(',', $line);
-            if (count($fields) !== 9)
-                return false;
-
-            if (!preg_match('/^\d{1,2}\.\d{1,2}\.\d{4}\s\d{2}:\d{2}:\d{2}$/u', $fields[0]) ||
-                !preg_match('/^[А-ЯA-Z]([а-яa-z])+\s[А-ЯA-Z]([а-яa-z])+\s[А-ЯA-Z]([а-яa-z])+$/u', $fields[1]) ||
-                $fields[2] !== 'Мужской' && $fields[2] !== 'Женский' ||
-                !preg_match('/^[A-Za-z0-9_]+[@][A-Za-z0-9_]+[.][A-Za-z0-9_]+$/u', $fields[3]) ||
-                !preg_match('/^[+][7|3][0-9]{9,11}$/u', $fields[4]) ||
-                !checkdate($fields[6], $fields[5], $fields[7])
-            ) return false;
-        }
-        return true;
-    }
-
     private function submitRecords(): bool {
         $fileNotAttached = !isset($_FILES["blog-data"]) || !isset($_FILES["blog-data"]["tmp_name"]);
         if ($fileNotAttached)
@@ -49,7 +26,6 @@ class BlogMessagesController extends RestController {
             $newBlogMessage->setText($record["text"]);
             $newBlogMessage->setImagePath($record["imagePath"]);
             $newBlogMessage->setTimestamp($record["timestamp"]);
-
             $newBlogMessage->save();
         }
 

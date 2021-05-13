@@ -2,6 +2,7 @@
 require_once(__DIR__ . "/../../core/routing/controller.core.php");
 require_once(__DIR__ . "/../../core/io/file-uploader.core.php");
 require_once(__DIR__ . "/../../views/guest-book/upload-messages.view.php");
+require_once(__DIR__ . "/../../modules/form-validators/guest-message.validator.php");
 
 class MessagesController extends RestController {
 
@@ -17,13 +18,11 @@ class MessagesController extends RestController {
             if (count($fields) !== 9)
                 return false;
 
-            if (!preg_match('/^\d{1,2}\.\d{1,2}\.\d{4}\s\d{2}:\d{2}:\d{2}$/u', $fields[0]) ||
-                !preg_match('/^[А-ЯA-Z]([а-яa-z])+\s[А-ЯA-Z]([а-яa-z])+\s[А-ЯA-Z]([а-яa-z])+$/u', $fields[1]) ||
-                $fields[2] !== 'Мужской' && $fields[2] !== 'Женский' ||
-                !preg_match('/^[A-Za-z0-9_]+[@][A-Za-z0-9_]+[.][A-Za-z0-9_]+$/u', $fields[3]) ||
-                !preg_match('/^[+][7|3][0-9]{9,11}$/u', $fields[4]) ||
-                !checkdate($fields[6], $fields[5], $fields[7])
-            ) return false;
+            $validator = new GuestMessageValidator();
+            $result = $validator->validate($fields);
+
+            if (!$result->isValid())
+                return false;
         }
         return true;
     }
