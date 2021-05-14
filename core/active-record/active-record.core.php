@@ -8,9 +8,14 @@ abstract class ActiveRecord {
      * Establishes connection to the database
      */
     public static function connect(): void {
-        $dsn = 'mysql:dbname=student_db;host=127.0.0.1';
-        $username = 'root';
-        $password = '614729';
+
+        $dbName = getenv("WEB_DB_NAME");
+        $host = getenv("WEB_DB_HOST");
+        $username = getenv("WEB_DB_USERNAME");
+        $password = getenv("WEB_DB_PASSWORD");
+
+        $dsn = "mysql:dbname=$dbName;host=$host";
+
         try {
             self::$databaseObject = new PDO(
                 $dsn, $username, $password,

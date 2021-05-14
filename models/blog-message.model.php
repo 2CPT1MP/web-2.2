@@ -100,6 +100,7 @@ class BlogMessage implements IEntity {
     }
 
     public static function getPageCount(int $recordsPerPage): int {
+        self::sync();
         $query = "SELECT COUNT(*) FROM BlogMessage;";
         $statement = ActiveRecord::getDatabaseObject()->query($query);
         if (!$statement)
@@ -110,6 +111,7 @@ class BlogMessage implements IEntity {
     }
 
     public static function getCount(): int {
+        self::sync();
         $query = "SELECT COUNT(*) FROM BlogMessage;";
         $statement = ActiveRecord::getDatabaseObject()->query($query);
         if (!$statement)
