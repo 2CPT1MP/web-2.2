@@ -22,7 +22,9 @@ class BlogMessage implements IEntity {
     public function getTimestamp(): string { return $this->timestamp; }
 
     private function createNew(): bool {
-        $this->timestamp = date('Y-m-d H:i:s');
+        if (!isset($this->timestamp))
+            $this->timestamp = date('Y-m-d H:i:s');
+
         $query = ActiveRecord::getDatabaseObject()->prepare("
                 INSERT INTO BlogMessage(topic, text, imagePath, timestamp) 
                 VALUES(:topic, :text, :imagePath, :timestamp);
@@ -38,7 +40,8 @@ class BlogMessage implements IEntity {
     public function hasImage(): bool { return $this->imagePath !== null; }
 
     private function updateExisting(): bool {
-        $this->timestamp = date('Y-m-d H:i:s');
+        if (!isset($this->timestamp))
+            $this->timestamp = date('Y-m-d H:i:s');
         $query = ActiveRecord::getDatabaseObject()->prepare("
             UPDATE BlogMessage 
             SET topic = :topic,
@@ -146,7 +149,7 @@ class BlogMessage implements IEntity {
                 topic VARCHAR(100) NOT NULL,
                 text VARCHAR(500) NOT NULL,
                 imagePath VARCHAR(100),
-                timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
             );
         ");
         $query->execute();
