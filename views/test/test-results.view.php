@@ -4,7 +4,9 @@ require_once(__DIR__ . "/../../models/test.model/test-question.model.php");
 class TestResultsView {
     public static function render(Result $result): string {
         $html = HeaderView::render("Результаты тестирования");
-        $html .= '<section class="card"><h2>Результаты тестирования</h2>';
+        $html .= "<section class='card'><h2>{$result->getTitle()}</h2>";
+        $html .= "<table><tr><td class='th'>Отправлен</td><td>{$result->getTimestamp()}</td>";
+        $html .= "<tr><td class='th'>Тестируемый</td><td>{$result->getStudentName()}</td></tr></table>";
         $questions = [];
         $number = 1;
 

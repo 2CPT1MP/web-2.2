@@ -39,9 +39,12 @@ class ExamineeValidator extends PersonValidator {
     }
 
     public function verifyResults($formData): Result {
+        $resultName =
         $test = Test::findById($formData["test-id"]);
         $questions = $test->getTestQuestions();
         $testResult = new Result("Результат");
+        $testResult->setTimestamp(date('Y-m-d H:i:s'));
+        $testResult->setStudentName($formData["sender-name"]);
 
         foreach ($questions as $question) {
             $formAnswersArray = $this->getFormAnswersFor($question->getQuestion());
