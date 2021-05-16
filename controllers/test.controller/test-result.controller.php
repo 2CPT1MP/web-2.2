@@ -1,11 +1,17 @@
 <?php require_once(__DIR__ . '/../../modules/form-validators/examinee.validator.php');
 require_once(__DIR__ . '/../../views/test/test-results.view.php');
+require_once(__DIR__ . '/../../views/test/test-results-list.view.php');
 
 class TestResultController extends RestController {
 
+    public function showAllResults(): string {
+        $testResults = Result::findAll();
+        return TestResultsListView::render($testResults);
+    }
+
     public function GET(Request $request): string {
         if (!isset($request->getParams()["id"]))
-            return MessageView::render("Ошибка", "Укажите номер теста для просмотра результата. Например: <br>/test/result?id=1");
+            return $this->showAllResults();
 
         $testId = $request->getParams()["id"];
         $properResult = Result::findById($testId);

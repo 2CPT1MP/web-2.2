@@ -7,8 +7,11 @@ class TestView {
     public static function render(Test $test): string {
         $html = HeaderView::render('Тест');
         $html .= <<<TESTVIEW
-                <article class="flex-container card">
+                <h3><b><a href="/test/result">Результаты</a></b></h3>
+                <section class="flex-container card">
                     <h2>Тестирование</h2>
+                    
+                    
                         <form action="/test/verify" method=POST autocomplete="off">
                         <input name="test-id" type="hidden" value={$test->getId()} readonly>
                         <label id="fio-label">Ваше ФИО:
